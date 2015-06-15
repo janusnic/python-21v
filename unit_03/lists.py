@@ -2,6 +2,12 @@
 a_list = []
 print a_list
 
+names = ['Dave', 'Mark', 'Ann', 'Phil']
+
+
+print(names[2])
+
+
 a_list = ['a','b','mpilgrim','z','example']
 
 print a_list

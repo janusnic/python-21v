@@ -1,0 +1,12 @@
+a_set = set()
+print(type(a_set))
+a_set.add(4)
+print(len(a_set))
+print(a_set)
+a_set.add(1)
+print(len(a_set))
+print(a_set)
+
+a_set.add(1)
+print(len(a_set))
+print(a_set)
