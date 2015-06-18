@@ -1,0 +1,6 @@
+google.com
+http://gmail.com
+www.ibm.com
+redhat.com
+example.com
+i-believe-this-domain-does-not-exist-123abc.com
