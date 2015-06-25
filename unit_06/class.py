@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 def foo(): pass
 
-print foo.__class__ # &lt;type 'function'&gt;
+print 'foo.__class__=',foo.__class__ # &lt;type 'function'&gt;
 
-print foo.__dict__ # {}
+print 'foo.__dict__=',foo.__dict__ # {}
 
 # print (42).__dict__ # Traceback (most recent call last): File "&lt;stdin&gt;", line 1, in &lt;module&gt; AttributeError: 'int' object has no attribute '__dict__'
 
-print (42).__class__ # &lt;type 'int'&gt;
+print '(42).__class__=',(42).__class__ # &lt;type 'int'&gt;
 
 class A(object):
     qux = 'A'
@@ -20,16 +20,17 @@ a = A('a')
 
 # У a тоже есть __dict__ и __class__:
 
-print a.__dict__   # {'name': 'a'}
-print a.__class__  # &lt;class '__main__.A'&gt;
-
-print type(a) # &lt;class '__main__.A'&gt;
+print 'a.__dict__=',a.__dict__   # {'name': 'a'}
+print 'a.__class__=',a.__class__  # &lt;class '__main__.A'&gt;
+print 'A.__name__=',A.__name__ 
+print 'A.__bases__=',A.__bases__ 
+print 'type(a):',type(a) # &lt;class '__main__.A'&gt;
 
 print a.__class__ is type(a) # True
 
 # Класс и тип — это одно и то же.
 
-print a.__class__ is type(a) is A # True
+print 'Класс и тип — это одно и то же.',a.__class__ is type(a) is A # True
 
 # Пример. Переопределим класс объекта a:
 
@@ -42,7 +43,7 @@ class B(object):
 
 print a.__dict__ # {'name': 'a'}
 
-print a.foo() # foo
+a.foo() # foo
 
 print a.__class__ # &lt;class '__main__.A'&gt;
 
@@ -178,7 +179,7 @@ print A.quux # &lt;unbound method A.&lt;lambda&gt;&gt;
 
 # И доступ к нему появится у экземпляров:
 
-print a.quux() # 'i have quux method'
+#print a.quux() # 'i have quux method'
 
 # объявим класс:
 
