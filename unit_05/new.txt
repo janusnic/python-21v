@@ -1,5 +1,0 @@
-YoYou problem stems from reading from and writing to the same file. Rather than opening fileToSearch for writing, open an actual temporary file and then after you're done and have closed tempFile, use os.rename to move the new file over fileToSearch.
-
-You problem stems from reading from and writing to the same file. Rather than opening fileToSearch for writing, open an actual temporary file and then after you're done and have closed tempFile, use os.rename to move the new file over fileToSearch.
-
-You problem stems from reading from and writing to the same file. Rather than opening fileToSearch for writing, open an actual temporary file and then after you're done and have closed tempFile, use os.rename to move the new file over fileToSearch.
