@@ -34,18 +34,20 @@ def modulo(x,y):
     """This function modulos two numbers"""
     return x % y
 
+ops = ('+','-','*','/','//','%','**')
+titles = ('Select operation:', "Usage operation:")
+choices = ("Calculate", "Help", "Quit" )
+
 def menu():
+
+    gup = ': '
     print 'Super Calc'.upper().center(30, '=')
     print("_"*30)
-    str1 = 'Select operation:'
-    print('|'+str1+' '*(28-len(str1))+'|')
-    print '|'+"_"*28+'|'
-    print("| c : Calculate").ljust(29,' ')+'|'
-    print("| h : Help").ljust(29,' ')+'|'
-    print("| q : Quit").ljust(29,' ')+'|'
+    print('| '+ titles[0].ljust(27,' ')+ '|')
+    for item in choices:
+        print('| '+ item[0].lower()+ gup + item.ljust(24,' ')+ '|')
 
     print("="*30)
-
     choice = raw_input("| Enter choice(h|c|q):".title())
     return str(choice) if choice != '' else 'h'
 
@@ -56,7 +58,15 @@ def myhelp():
         'c'                        Calculate
         'q'                        Quit
         """
-ops = ('+','-','*','/','//','%','**')
+
+def extacts(entry,o):
+    index = entry.find(o)
+    if index != -1:
+        a,b = entry.split(o)
+        a = a.strip()
+        b = b.strip()
+    return (a,b,o)
+
 while True:
 
     choice = menu()
@@ -71,15 +81,11 @@ while True:
         entry = raw_input("Enter x operator y: ")
 
         for o in ops:
-            index = entry.find(o)
-            print o
-            if index != -1:
-                operator = o
-                print o
-                a,b = entry.split(o)
-                print a,b,o
-                a = a.strip()
-                b = b.strip()
+            if entry.count(o) == 1:
+                a,b,operator = extacts(entry,o)
+            if entry.count(o) == 2:
+                # op =2*o
+                a,b,operator = extacts(entry,2*o)
 
         if a.isdigit():
             x = float(a)
@@ -93,7 +99,7 @@ while True:
             myhelp()
             continue
 
-        if operator not in ('+','-','*','/','//','%','**'):
+        if operator not in ops:
             myhelp()
             continue
 

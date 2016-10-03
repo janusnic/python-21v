@@ -35,17 +35,15 @@ def modulo(x,y):
     return x % y
 
 def menu():
+    choices = (' Select operation: ', "Calculate", "Help", "Quit" )
+
     print 'Super Calc'.upper().center(30, '=')
     print("_"*30)
-    str1 = 'Select operation:'
-    print('|'+str1+' '*(28-len(str1))+'|')
-    print '|'+"_"*28+'|'
-    print("| c : Calculate").ljust(29,' ')+'|'
-    print("| h : Help").ljust(29,' ')+'|'
-    print("| q : Quit").ljust(29,' ')+'|'
+    for item in choices:
+        gup = ': ' if item[0] != ' ' else '  '
+        print('| '+ item[0].lower()+ gup + item.ljust(24,' ')+ '|')
 
     print("="*30)
-
     choice = raw_input("| Enter choice(h|c|q):".title())
     return str(choice) if choice != '' else 'h'
 
@@ -56,6 +54,16 @@ def myhelp():
         'c'                        Calculate
         'q'                        Quit
         """
+
+ops = ('+','-','*','/','//','%','**')
+
+def extacts(entry,o):
+    index = entry.find(o)
+    if index != -1:
+        a,b = entry.split(o)
+        a = a.strip()
+        b = b.strip()
+    return (a,b,o)
 
 while True:
 
@@ -68,10 +76,26 @@ while True:
         myhelp()
         continue
     if choice == 'c':
-        a,operator,b = raw_input("Enter x operator y: ").split()
+        entry = raw_input("Enter x operator y: ")
 
-        x = float(a) if a.isdigit() else myhelp(); continue
-        y = float(b) if b.isdigit() else myhelp(); continue
+        for o in ops:
+            if entry.count(o) == 1:
+                a,b,operator = extacts(entry,o)
+            if entry.count(o) == 2:
+                # op =2*o
+                a,b,operator = extacts(entry,2*o)
+
+        if a.isdigit():
+            x = float(a)
+        else:
+            myhelp()
+            continue
+
+        if b.isdigit():
+            y = float(b)
+        else:
+            myhelp()
+            continue
 
         if operator not in ('+','-','*','/','//','%','**'):
             myhelp()

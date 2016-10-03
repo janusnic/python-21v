@@ -34,28 +34,50 @@ def modulo(x,y):
     """This function modulos two numbers"""
     return x % y
 
-def menu():
-    print 'Super Calc'.upper().center(30, '=')
-    print("_"*30)
-    str1 = 'Select operation:'
-    print('|'+str1+' '*(28-len(str1))+'|')
-    print '|'+"_"*28+'|'
-    print("| c : Calculate").ljust(29,' ')+'|'
-    print("| h : Help").ljust(29,' ')+'|'
-    print("| q : Quit").ljust(29,' ')+'|'
+ops = ('+','-','*','/','//','%','**')
+titles = ('Select operation:', "Usage operation:")
+choices = ( "Help", "Calculate", "Quit" )
+helpers = ('Display this usage message', 'Example: 55 % 7', 'Exit programm')
 
-    print("="*30)
+
+def printMenu(w,j,obj):
+    gup = (': ','| ')
+
+    print("_"*(w+7))
+    print(gup[1]+ titles[j].ljust(w+3,' ')+ gup[1][::-1])
+
+    for item in obj:
+        print(gup[1]+ item[0].lower()+ gup[0] + item.ljust(w,' ')+ gup[1][::-1])
+
+    print("="*(w+7))
+
+
+def menu():
+
+    tupleLen = [ len(i) for i in choices ]
+    width = max(max(tupleLen),len(titles[0]))
+
+    print 'Super Calc'.upper().center(width+7, '=')
+    printMenu(width,0,choices)
 
     choice = raw_input("| Enter choice(h|c|q):".title())
     return str(choice) if choice != '' else 'h'
 
 def myhelp():
-   print """\
-   Usage operation:
-        'h'                        Display this usage message
-        'c'                        Calculate
-        'q'                        Quit
-        """
+    list1 = list()
+    for i in range(len(helpers)):
+        list1.append(choices[i]+' - ' + helpers[i])
+
+    listLen = [ len(i) for i in list1 ]
+    printMenu(max(listLen),1,list1)
+
+def extacts(entry,o):
+    index = entry.find(o)
+    if index != -1:
+        a,b = entry.split(o)
+        a = a.strip()
+        b = b.strip()
+    return (a,b,o)
 
 while True:
 
@@ -68,14 +90,30 @@ while True:
         myhelp()
         continue
     if choice == 'c':
-        a,operator,b = raw_input("Enter x operator y: ").split()
-        x = float(a)
-        y = float(b)
+        entry = raw_input("Enter x operator y: ")
 
-        if operator not in ('+','-','*','/','//','%','**'):
+        for o in ops:
+            if entry.count(o) == 1:
+                a,b,operator = extacts(entry,o)
+            if entry.count(o) == 2:
+                a,b,operator = extacts(entry,2*o)
 
+        if a.isdigit():
+            x = float(a)
+        else:
             myhelp()
             continue
+
+        if b.isdigit():
+            y = float(b)
+        else:
+            myhelp()
+            continue
+
+        if operator not in ops:
+            myhelp()
+            continue
+
         if operator == "+":
             print ("{} + {} = {}".format(x, y, add(x, y)))
 
