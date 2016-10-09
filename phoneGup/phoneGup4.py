@@ -29,6 +29,21 @@ helpers = (
     'Exit programm'
     )
 
+contacts = {
+    0: {
+        'firstName': 'Alice',
+        'lastName': 'Foo',
+        'phone': '23411122',
+        'address': '23 Foo drive',
+     },
+    1: {
+        'firstName': 'Beth',
+        'lastName': 'Bar',
+        'phone': '23422255',
+        'address': '44 Bar street',
+    },
+}
+
 
 def printMenu(w, j, obj):
     gup = (': ', '| ')
@@ -73,15 +88,26 @@ phone_list = [
 ]
 
 
-def print_numbers(numbers):
-    print("Phone Numbers in PhoneGup:")
-    for item in numbers:
-        print "Name:", item[0], "\tNumber:", item[1]
+def print_contacts(contacts):
+    print("All Contacts in PhoneGup:")
+    for id in contacts:
+        print(
+            "Name:", contacts[id]['firstName'],
+            "\tNumber:", contacts[id]['phone']
+            )
     print
 
 
-def add_number(name, number):
-    phone_list.append([name, number])
+def add_contact(firstName, lastName, phone, address):
+    d = {
+        'firstName': firstName,
+        'lastName': lastName,
+        'phone': phone,
+        'address': address
+        }
+
+    contacts.update({len(contacts): d})
+
 
 while True:
 
@@ -93,16 +119,16 @@ while True:
     if choice == 'h':
         myhelp()
         continue
-
     if choice == 'p':
-        print_numbers(phone_list)
-
+        print_contacts(contacts)
     elif choice == 'a':
-        print("Add Name and Number")
-        name = raw_input("Name: ")
-        phone = raw_input("Number: ")
-        add_number(name, phone)
+        print("Add New Record To PhoneGap")
+        firstName = raw_input("First Name: ")
+        lastName = raw_input("Last Name: ")
+        phone = raw_input("Phone Number: ")
+        address = raw_input("Address: ")
 
+        add_contact(firstName, lastName, phone, address)
     else:
         myhelp()
         continue

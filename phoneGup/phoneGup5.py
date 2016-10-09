@@ -29,6 +29,21 @@ helpers = (
     'Exit programm'
     )
 
+contacts = [
+    {
+        'firstName': 'Alice',
+        'lastName': 'Foo',
+        'phone': '23411122',
+        'address': '23 Foo drive',
+     },
+    {
+        'firstName': 'Beth',
+        'lastName': 'Bar',
+        'phone': '23422255',
+        'address': '44 Bar street',
+    },
+]
+
 
 def printMenu(w, j, obj):
     gup = (': ', '| ')
@@ -67,21 +82,27 @@ def myhelp():
     listLen = [len(i) for i in list1]
     printMenu(max(listLen), 1, list1)
 
-phone_list = [
-    ['Bob', '1234567'],
-    ['Mary', '2345671'],
-]
 
-
-def print_numbers(numbers):
-    print("Phone Numbers in PhoneGup:")
-    for item in numbers:
-        print "Name:", item[0], "\tNumber:", item[1]
+def print_contacts(contacts):
+    print("All Contacts in PhoneGup:")
+    for item in contacts:
+        print(
+            "Name:", item['firstName'],
+            "\tNumber:", item['phone']
+            )
     print
 
 
-def add_number(name, number):
-    phone_list.append([name, number])
+def add_contact(firstName, lastName, phone, address):
+    d = {
+        'firstName': firstName,
+        'lastName': lastName,
+        'phone': phone,
+        'address': address
+        }
+
+    contacts.append(d)
+
 
 while True:
 
@@ -93,16 +114,16 @@ while True:
     if choice == 'h':
         myhelp()
         continue
-
     if choice == 'p':
-        print_numbers(phone_list)
-
+        print_contacts(contacts)
     elif choice == 'a':
-        print("Add Name and Number")
-        name = raw_input("Name: ")
-        phone = raw_input("Number: ")
-        add_number(name, phone)
+        print("Add New Record To PhoneGap")
+        firstName = raw_input("First Name: ")
+        lastName = raw_input("Last Name: ")
+        phone = raw_input("Phone Number: ")
+        address = raw_input("Address: ")
 
+        add_contact(firstName, lastName, phone, address)
     else:
         myhelp()
         continue

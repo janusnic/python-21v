@@ -29,6 +29,21 @@ helpers = (
     'Exit programm'
     )
 
+contacts = {
+    '1': {
+        'firstName': 'Alice',
+        'lastName': 'Foo',
+        'phone': '23411122',
+        'addr': '23 Foo drive',
+     },
+    '2': {
+        'firstName': 'Beth',
+        'lastName': 'Bar',
+        'phone': '23422255',
+        'addr': '44 Bar street',
+    },
+}
+
 
 def printMenu(w, j, obj):
     gup = (': ', '| ')
@@ -80,6 +95,16 @@ def print_numbers(numbers):
     print
 
 
+def print_contacts(contacts):
+    print("All Contacts in PhoneGup:")
+    for id in contacts:
+        print(
+            "Name:", contacts[id]['firstName'],
+            "\tNumber:", contacts[id]['phone']
+            )
+    print
+
+
 def add_number(name, number):
     phone_list.append([name, number])
 
@@ -93,16 +118,15 @@ while True:
     if choice == 'h':
         myhelp()
         continue
-
     if choice == 'p':
-        print_numbers(phone_list)
-
+        # print_numbers(phone_list)
+        print_contacts(contacts)
+        print contacts.keys()
     elif choice == 'a':
         print("Add Name and Number")
         name = raw_input("Name: ")
         phone = raw_input("Number: ")
         add_number(name, phone)
-
     else:
         myhelp()
         continue

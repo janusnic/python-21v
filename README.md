@@ -1,1350 +1,522 @@
-# python-21v unit 03
-# Коллекции данных в Python
-- кортежи  (tuple)
-- списки   (list)
+# python-21v unit 04
+# Словари в Python
+
+Словарь — это неупорядоченное множество пар ключ—значение. Когда вы добавляете ключ в словарь, вы также должны добавить и значение для этого ключа. (Значение всегда можно изменить позже.) Словари в Python оптимизированы для получения значения по известному ключу.
+
+        contacts = {
+            '1': {
+                'firstName': 'Alice',
+                'lastName': 'Foo',
+                'phone': '23411122',
+                'addr': '23 Foo drive',
+             },
+            '2': {
+                'firstName': 'Beth',
+                'lastName': 'Bar',
+                'phone': '23422255',
+                'addr': '44 Bar street',
+            },
+        }
+
+
+# in — оператор проверки вхождения.
+## Получить список всех телефона в базе данных по id:
+
+        def print_contacts(contacts):
+            print("All Contacts in PhoneGup:")
+            for id in contacts:
+                print(
+                    "Name:", contacts[id]['firstName'],
+                    "\tNumber:", contacts[id]['phone']
+                    )
+
+# How to change or add elements in a dictionary?
+
+Dictionary are mutable. We can add new items or change the value of existing items using assignment operator.
+
+If the key is already present, value gets updated, else a new key: value pair is added to the dictionary.
+
+## update([other]) 	— изменяет значение по key/value
+Update the dictionary with the key/value pairs from other, overwriting existing keys.
+                    def add_contact(firstName, lastName, phone, address):
+                        d = {
+                            'firstName': firstName,
+                            'lastName': lastName,
+                            'phone': phone,
+                            'address': address
+                            }
+
+                        contacts.update({2: d})
+
+# keys() — возвращает список ключей;
+
+        contacts = {
+            0: {
+                'firstName': 'Alice',
+                'lastName': 'Foo',
+                'phone': '23411122',
+                'address': '23 Foo drive',
+             },
+            1: {
+                'firstName': 'Beth',
+                'lastName': 'Bar',
+                'phone': '23422255',
+                'address': '44 Bar street',
+            },
+        }
+
+        print contacts.keys()
+        print len(contacts.keys())
+        print max(contacts.keys())
+
+## phoneGup4.py
+
+        def add_contact(firstName, lastName, phone, address):
+            d = {
+                'firstName': firstName,
+                'lastName': lastName,
+                'phone': phone,
+                'address': address
+                }
+
+            contacts.update({len(contacts): d})
+
+## phoneGup5.py
+
+            contacts = [
+                {
+                    'firstName': 'Alice',
+                    'lastName': 'Foo',
+                    'phone': '23411122',
+                    'address': '23 Foo drive',
+                 },
+                {
+                    'firstName': 'Beth',
+                    'lastName': 'Bar',
+                    'phone': '23422255',
+                    'address': '44 Bar street',
+                },
+            ]
+
+            def print_contacts(contacts):
+                print("All Contacts in PhoneGup:")
+                for item in contacts:
+                    print(
+                        "Name:", item['firstName'],
+                        "\tNumber:", item['phone']
+                        )
+                print
+
+
+            def add_contact(firstName, lastName, phone, address):
+                d = {
+                    'firstName': firstName,
+                    'lastName': lastName,
+                    'phone': phone,
+                    'address': address
+                    }
+
+                contacts.append(d)
+
+## phoneGup6.py
+
+        def look_contact():
+            fieldList = [item[0] for item in lookup]
+            fieldList = ' | '.join(fieldList)
+            look = raw_input("Enter Field "+fieldList+':>')
+            return str(look) if look != '' else 'h'
+
+        def print_contact(look):
+            key = 'phone'
+            search = raw_input("Enter Search String " + ':>')
+            for contact in contacts:
+                if search in contact['firstName']:
+                    print("Contact in PhoneGup:")
+                    print "%s %s phone is %s" % (contact['firstName'], contact['lastName'], contact[key])
+                    print
+
+
+## phoneGup7.py
+        def print_contact(look):
+            for lookKey in lookup:
+                if lookKey.startswith(look):
+                    serchKey = lookKey
+            key = 'phone'
+            search = raw_input("Enter Search String " + ':>')
+            for contact in contacts:
+                if search in contact[serchKey]:
+                    print("Contact in PhoneGup:")
+                    print "%s %s phone is %s" % (contact['firstName'], contact['lastName'], contact[key])
+                    print
+
+            if choice == 'l':
+                look = look_contact()
+                if look == 'h':
+                    print 'Use f for First Name or l for LAst Name'
+                else:
+                    print_contact(look)
+
+# get() — получает значение по ключу, в случае отсутствия дает None:
+                    d = {}
+                    print d.get('name')
+
+## phoneGup8.py
+                    def print_contact(look):
+                        for lookKey in lookup:
+                            if lookKey.startswith(look):
+                                serchKey = lookKey
+                        key = 'phone'
+                        search = raw_input("Enter Search String " + ':>')
+                        for contact in contacts:
+                            if search in contact.get(serchKey):
+                                print("Contact in PhoneGup:")
+                                print "%s %s phone is %s" % (contact.get('firstName'), contact.get('lastName'), contact.get(key))
+                                print
+
+## phoneGup8.py
+        def look_contact():
+            fieldList = [item[0] for item in lookup]
+            look = raw_input("Enter Field "+' | '.join(fieldList)+':>')
+            return str(look) if (look != '' and look in fieldList) else 'h'
 
-Кортежи и списки могут использоваться для хранения произвольного числа элементов данных любых типов.
+        def print_contact(look):
+            for lookKey in lookup:
+                if lookKey.startswith(look):
+                    serchKey = lookKey
+            key = 'phone'
+            search = raw_input("Enter Search String " + ':>')
+            for contact in contacts:
+                if search.upper() in contact.get(serchKey).upper():
+                    print("Contact in PhoneGup:")
+                    print "%s %s phone is %s" % (contact.get('firstName'), contact.get('lastName'), contact.get(key))
+                    print
 
-# Кортежи - неизменяемые объекты.
-## Кортежи создаются с помощью запятых (,)
+# iterkeys() — возвращает итератор ключей:
 
-        >>> "green", "red", "yellow", "orange", "blue"
-        ('green', 'red', 'yellow', 'orange', 'blue')
-        >>>
-        >>> "Autumn", "Winter", "Spring", "Summer"
-        ('Autumn', 'Winter', 'Spring', 'Summer')
-        >>>
-        >>> "Montag",
-        ('Montag',)
-        >>>
-        >>> 1,
-        (1,)
-        >>>
+                    d.iterkeys()
 
-При выводе кортежа интерпретатор заключает его в круглые скобки.
+# copy()
+Пример создания копии словаря:
 
-- (1,)   - кортеж с одним элементом
-- ()     - пустой картеж
+        x = {"user":'admin','attr':[1,2,3]}
+        y = x.copy()
 
-## Списки можно создавать с помощью квадратных скобок:
+Метод copy() не делает полного копирования: если мы, например, сделаем операцию:
+        x['attr'].remove(1)
+то обнаружим, что удаление атрибута произойдет также и в копии.
+Чтобы этого не произошло, нужно использовать метод deepcopy().
+        from copy import deepcopy
+        y = x.deepcopy()
 
-        >>> ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"]
-        ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag']
-        >>>
-        >>> ["green", "red", "yellow", "orange", "blue"]
-        ['green', 'red', 'yellow', 'orange', 'blue']
-        >>>
-        >>> [1, 2, 3, 4, 5]
-        [1, 2, 3, 4, 5]
-        >>>
-        >>> []
-        []           - пустой список
-        >>>
+# fromkeys() — создает словарь по заданным ключам с пустыми значениями:
+    {}.fromkeys(['name', 'age'])
 
-# Списки и кортежи хранят не сами элементы данных, а ссылки на объекты.
+# Можно все значения заполнить по умолчанию:
+    {}.fromkeys(['name', 'age'],123)
 
-При создании списков и кортежей создаются копии указанных ссылок на объекты.
+    marks = {}.fromkeys(['Math','English','Science'], 0)
 
-Даже в случае значений-литералов, таких как целые числа и строки,
-в памяти создаются и инициализируются объекты соответствующих типов,
-затем создаются ссылки, указывающте на эти объекты,
-и эти ссылки помещаются в список или картеж.
+    # Output: {'English': 0, 'Math': 0, 'Science': 0}
+    print(marks)
 
-Можно вкладывать одни объекты-коллекции в другие, например создать список списков.
+    for item in marks.items():
+        print(item)
 
-Рассмотрим функцию len(), которая в качестве аргумента принимает единственный элемент данных и возвращает его длину в виде значения типа int.
+    # Output: ['English', 'Math', 'Science']
+    list(sorted(marks.keys()))
 
-        >>> len(("green",))
-        1
-        >>>
-        >>> len([1, 2, 3, 4, 5, "red", "yellow", 8])
-        8
-        >>>
-        >>> len("oracle")
-        6
-        >>>
+# has_key() — проверяет, есть ли в словаре значение по данному ключу:
+    d = {}
+    d.has_key('name')
 
-Кортежи, списки и строки имеют размер, т.е. это типы данных, которые обладают категорией размера.
-Элементы данных таких типов можно передавать функции len().
+# items() — возвращает список значений:
 
-Все элементы данных в языке Python являются объектами (экземплярами) определенных типов данных (классов).
+    for key, value in d.items():
+            print(key, value)
 
-Тип данных <-----> Класс  - будем считать синонимами.
+# iteriyems() — возвращает итератор — выдает тот же результат:
 
-В некоторых языках существуют элементы данных не являющиеся объектами, так называемые простые элементы.
-Одно из основных отличий между объектом и простым элементом состоит в том, что объект может обладать методами.
+    for k, v in d.iteritems():
+    ...     print k, v
 
-В сущности метод - это обычная функция, которая вызывается в контексте конкретного объекта.
 
-Например, тип list  имеет метод append(), с помощью которого можно добавить новый объект в список.
+# pop() — извлекает значение по ключу с последующим удалением:
+    d.pop('title')
 
-        >>> z = [1, 2, "red", "yellow", 8]
-        >>>
-        >>> z.append("green")
-        >>>
-        >>> z
-        [1, 2, 'red', 'yellow', 8, 'green']
-        >>>
+# popitem() — извлекает произвольное значение с последующим удалением:
+    d = {'title': 'Python Web Site', 'url': 'http://www.python.org', 'www': 'python'}
+    d.popitem()
 
-Объект z знает, что принадлежит к типу list поэтому явно указывать тип данных не нужно.
+# values() — возвращает список значений:
 
-Первым аргументом методу append() передается сам объект z - делается это интерпретатором Python автоматически, в порядке реализованной в нем поддержки методов.
+    d={}
+    d[1]=1
+    d[2]=2
+    d[3]=3
+    d
 
-# Метод append() изменяет первоначальный список.
-Это возможно потому что списки относятся к категории изменяемых объектов.
+    d.values()
 
-Это более эффективно, чем создание нового списка включающего первоначальные элементы и дополнительный элемент с последующим связыванием ссылки на объект с новым списком.
+# del — оператор удаляет пару ключ: значение по ключу:
+    del d[2]
 
-В процедурном языке тоже самое могло бы быть достигнуто с использованием метода append()
 
-        >>> list.append(z, "orange" )
-        >>>
-        >>> z
-        [1, 2, 'red', 'yellow', 8, 'green', 'orange']
-        >>>
+# Python Dictionary Comprehension
 
-Здесь указываются тип данных и метод этого типа данных, а в качестве первого аргумента передается элемент данных того типа, метод которого вызывается, за которым следуют дополнительные параметры.
+Dictionary comprehension is an elegant and concise way to create new dictionary from an iterable in Python.
 
-С точки зрения наследования между этими двумя подходами существует малозаметное семантическое отличие.
-На практике наиболее часто используется первая форма.
+Dictionary comprehension consists of an expression pair (key: value) followed by for statement inside curly braces {}.
 
-Обычные функции в языке Python вызываются так:
+Here is an example to make a dictionary with each item being a pair of a number and its square.
 
-    имя_функции(аргументы)
+    squares = {x: x*x for x in range(6)}
 
-а методы вызываются так:
+    # Output: {0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25}
+    print(squares)
 
-    имя_объекта.имя_метода(аргументы)
+This code is equivalent to
 
-Тип list имеет множество других методов, включая insert(), который используется для вставки элемента в позицию с определенным индексом и remove(), который удаляет элемент с указанным индексом.
+        squares = {}
+        for x in range(6):
+           squares[x] = x*x
 
-Извлечь из строки символ можно так:
+A dictionary comprehension can optionally contain more for or if statements.
 
-    >>> s = "solaris"
-    >>> s[0]
-    's'
-    >>> s[5]
-    'i'
-    >>>
+An optional if statement can filter out items to form the new dictionary.
 
-Извлечь элемент из списка можно так:
+Here are some examples to make dictionary with only odd items.
 
-    >>> z = [1, 2, 3, 4, 5, "red", "yellow", 8]
-    >>> z[0]
-    1
-    >>> z[5]
-    'red'
-    >>>
+    odd_squares = {x: x*x for x in range(11) if x%2 == 1}
 
+    # Output: {1: 1, 3: 9, 5: 25, 7: 49, 9: 81}
+    print(odd_squares)
 
-Из кортежей мы можем только извлекать элементы с помощью []
+## phoneGup9.py
 
-    >>> t = ("green", "red", "yellow", "orange", "blue")
-    >>> t[0]
-    'green'
-    >>> t[4]
-    'blue'
-    >>>
+        def add_contact(rec):
+            #  zip(*iterables) Make an iterator
+            # that aggregates elements from each of the iterables.
+            d = {x: y for (x, y) in zip(lookup, rec)}
+            contacts.append(d)
 
-# Изменять значения элементов кортежа мы не можем:
 
-        >>> t = ("green", "red", "yellow", "orange", "blue")
-        >>> t[1] = "red"
-        Traceback (most recent call last):
-          File "", line 1, in
-            t[1] = "red"
-        TypeError: 'tuple' object does not support item assignment
-        >>>
+        def makeList(prompt):
+            raw = raw_input(prompt + ":> ")
+            return newRecord.append(raw)
+
+        elif choice == 'a':
+            newRecord = []
+            tup1 = ("First Name", "Last Name", "Phone Number", "Address")
+            print("Add New Record To PhoneGap")
+            for prompt in tup1:
+                makeList(prompt)
+            add_contact(newRecord)
+
+# Dictionary Membership Test
 
-Но для списков мы можем использовать [] еще и для изменения элементов списка:
+We can test if a key is in a dictionary or not using the keyword in. Notice that membership test is for keys only, not for values.
+
+        squares = {1: 1, 3: 9, 5: 25, 7: 49, 9: 81}
 
-        >>> z = [1, 2, 3, 4, 5, "red", "yellow", 8]
-        >>> z[1] = "green"
-        >>> z
-        [1, 'green', 3, 4, 5, 'red', 'yellow', 8]
-        >>>
+        # Output: True
+        print(1 in squares)
+
+        # Output: True
+        print(2 not in squares)
+
+        # membership tests for key only not value
+        # Output: False
+        print(49 in squares)
 
-Если указать индекс, выходящий за пределы списка, будет возбуждено исключение.
+# Iterating Through a Dictionary
 
-        >>> z = [1, 2, 3, 4, 5, "red", "yellow", 8]
-        >>> z[8]
-        Traceback (most recent call last):
-          File "", line 1, in
-            z[8]
-        IndexError: list index out of range
+Using a for loop we can iterate though each key in a dictionary.
 
-# Кортежи (Tuple)
-Для создания простейших структур данных можно использовать кортежи, которые позволяют упаковывать коллекции значений в единый объект.
+    squares = {1: 1, 3: 9, 5: 25, 7: 49, 9: 81}
+    for i in squares:
+        print(squares[i])
 
-Кортеж — это неизменяемый список. Кортеж не может быть изменён никаким способом после его создания.
+# Built-in Functions with Dictionary
 
-Кортеж использует меньше памяти, чем список. Как правило, кортежи применяют как статические данные. На практике в интернет проекте – это настройки к базе данных, модули для подключения и т.д.
+ Built-in functions like all(), any(), len(), cmp(), sorted() etc. are commonly used with dictionary to perform different tasks.
 
-## Синтаксис Python кортежей
+   all() 	Return True if all keys of the dictionary are true (or if the dictionary is empty).
+   any() 	Return True if any key of the dictionary is true. If the dictionary is empty, return False.
+   len() 	Return the length (the number of items) in the dictionary.
+   cmp() 	Compares items of two dictionaries.
+   sorted() 	Return a new sorted list of keys in the dictionary.
 
-Обозначить пустой кортеж нужно пустыми скобками (). Список в кортеже следует через запятую 1, 2, [1,2,3]). Важно соблюдать правило, когда кортеж будет содержать в себе только один элемент, после него обязательно нужно поставить запятую. Выглядит это так – ('Tuple1',). В случае если элементов два и больше, ставить запятую нет нужды.
+Here are some examples that uses built-in functions to work with dictionary.
 
-        a = ()
-        print(type(a))
-        # Кортеж с нулевым количеством элементов (пустой кортеж)
-        b = ('item',) # Кортеж с одним элементом (обратите внимание на запятую в конце)
-        print(type(b))
-        c = 'item', # Кортеж с одним элементом (обратите внимание на запятую в конце)
-        print(type(c))
-        print tuple('abc')
+   squares = {1: 1, 3: 9, 5: 25, 7: 49, 9: 81}
 
-        t = 1,[2,3]
-        t[1].append(4)
-        print t
+    # Output: 5
+    print(len(squares))
 
-## calc13.py
+    # Output: [1, 3, 5, 7, 9]
+    print(sorted(squares))
 
-                def menu():
 
-                    choices = ('Select operation:',"| c : Calculate","| h : Help","| q : Quit" )
-                    print 'Super Calc'.upper().center(30, '=')
-                    print("_"*30)
-                    for item in choices:
-                        print(item.ljust(29,' ')+'|')
+            # -*- coding:utf-8 -*-
+            # ---------- PhoneGup ----------
+            '''
+             Program make a simple phonegup that can add,
+             view, modify, delete and save the records
+            '''
+            titles = (
+                'Select operation:',
+                "Usage operation:"
+                )
 
-                    print("="*30)
+            choices = (
+                "Help",
+                'Print Phone Numbers',
+                'Add a Phone Number',
+                'Remove a Phone Number',
+                'Lookup a Phone Number',
+                'Save Phone Numbers',
+                "Quit"
+                )
 
-                    choice = raw_input("| Enter choice(h|c|q):".title())
-                    return str(choice) if choice != '' else 'h'
+            helpers = (
+                'Display this usage message',
+                'Print Phone Numbers',
+                'Add a Phone Number',
+                'Remove a Phone Number',
+                'Lookup a Phone Number',
+                'Save Phone Numbers',
+                'Exit programm'
+                )
 
-# Кортежи в Python имеют два метода: index() и count().
-## получить индекс первого вхождения в кортеже
-Для этих целей используется метод index(). Например, есть некий кортеж (1, 32, 34, 45) и нам нужно узнать индекс числа 32. Применяем (1, 32, 34, 45).index(32) и видим в ответе 1. То есть, если кортеж содержит одинаковые данные, то таким образом можно получить индекс первого вхождения.
+            contacts = [
+                {
+                    'firstName': 'Alice',
+                    'lastName': 'Foo',
+                    'phone': '23411122',
+                    'address': '23 Foo drive',
+                 },
+                {
+                    'firstName': 'Beth',
+                    'lastName': 'Bar',
+                    'phone': '23422255',
+                    'address': '44 Bar street',
+                },
+            ]
+            lookup = (
+                'firstName',
+                'lastName',
+                'phone',
+                'address'
+            )
 
-Чтобы посчитать количество вхождений в кортеж нужно использовать метод count(). К примеру, в результате (2, 32, 36, 43, 32, 143, 32).count(32) будет 3, поскольку в нашем кортеже число 32 повторяется трижды.
 
-# Кортежи могут быть преобразованы в списки и наоборот.
+            def printMenu(w, j, obj):
+                gup = (': ', '| ')
 
-        a_tuple = ("a","b","mpilgrim","z","example")
+                print("_"*(w+7))
+                print(gup[1] + titles[j].ljust(w+3, ' ') + gup[1][::-1])
 
-        a_list = list(a_tuple)
+                for item in obj:
+                    print(
+                        gup[1] + item[0].lower() + gup[0] +
+                        item.ljust(w, ' ') + gup[1][:: -1]
+                        )
 
-        print(a_list[0])
-        print(a_list[-1])
-        print(a_list[1:3])
-        a_list.append('new')
-        print(a_list[1:])
-        a_list.remove('z')
-        print(a_list[1:])
+                print("="*(w+7))
 
-        a_tuple1 = tuple(a_list)
-        print(a_tuple1[0])
-        print(a_tuple1[-1])
-        print(a_tuple1[1:])
-
-
-# Присваивание нескольких значений за раз
-
-        v = ('a',2,True)
-        (x,y,z) = v
-        print(x)
-        print(y)
-        print(z)
-
-        a_puble = (MONDAY,TUESDAY,WEDNESDAY,THURSDAY,FRIDAY,SATURDAY,SUNDAY) =
-        range(7)
-
-        print(a_puble[MONDAY])
-
-        print(a_puble[SUNDAY])
-        print(SUNDAY)
-
-
-# Получение данных из кортежа
-
-        tup2 = (1, 2, 3, 4, 5, 6, 7 );
-        print "tup2[1:5]: ", tup2[1:5]
-
-Кортеж не допускает изменений, в него нельзя добавить новый элемент, хотя он может содержать объекты, которые можно изменить:
-
-        >>> t = 1,[2,3]
-        >>> t
-        (1, [2, 3])
-        >>> t[1] = 2
-        TypeError: 'tuple' object does not support item assignment
-        >>> t[1].append(4)
-        >>> t
-        (1, [2, 3, 4])
-
-## calc14.py
-
-        def menu():
-            choices = (' Select operation: ', "Calculate", "Help", "Quit" )
-
-            print 'Super Calc'.upper().center(30, '=')
-            print("_"*30)
-            for item in choices:
-                gup = ': ' if item[0] != ' ' else '  '
-                print('| '+ item[0].lower()+ gup + item.ljust(24,' ')+ '|')
-
-            print("="*30)
-            choice = raw_input("| Enter choice(h|c|q):".title())
-            return str(choice) if choice != '' else 'h'
-
-## calc15.py
-
-        titles = ('Select operation:', "Usage operation:")
-
-        def menu():
-            choices = ("Calculate", "Help", "Quit" )
-            gup = ': '
-            print 'Super Calc'.upper().center(30, '=')
-            print("_"*30)
-            print('| '+ titles[0].ljust(27,' ')+ '|')
-            for item in choices:
-                print('| '+ item[0].lower()+ gup + item.ljust(24,' ')+ '|')
-
-            print("="*30)
-            choice = raw_input("| Enter choice(h|c|q):".title())
-            return str(choice) if choice != '' else 'h'
-
-# Конкатенация кортежей (объединение)
-
-Мы можем объединять кортежи в Python так же как и другие типы данных.
-
-        a = (1,) # если в кортеже один элемент то необходимо ставить запятую после него.
-        b = ([1,2,3], 'word') # кортеж в себе может содержать любые типы данных
-        с = ((1,), {'name': ' Bob'})
-        all = a+b+c
-        print(all) # результат конкатенции кортежей
-
-Результат будет такой же как и при работе с литералами:
-
-        a = (1,) * 10
-        print(a) #  (1,1,1,1,1,1,1,1,1,1)
-
-# Списки (list). Функции и методы списков
-
-Списки в Python - упорядоченные изменяемые коллекции объектов произвольных типов (нумерованные наборы объектов), пронумерованные от 0.
-
-Каж­дый элемент набора содержит лишь ссылку на объект - по этой причине они моrут содержать объекты произвольного типа данных и иметь неограниченную степень вложенности.
-Позиция элемента в наборе задается индексом - нумерация элементов начинается с 0, а не с 1.
-
-Как и все последовательности, они поддерживают обращение к элементу по индексу, получение среза, конкатенацию (оператор +), повторение (оператор *), проверку на вхождение (опера­тор in) и невхождение (оператор not in).
-
-Списки относятся к изменяемым типам данных. Это означает, что мы можем не только получить элемент по индексу, но и изменить его:
-
-    arr = [1, 2, 3]
-    print arr[0]
-    arr[0] = 50
-    print arr
-
-# Создание списка
-
-Создать список можно следующими способами:
-
-1. С помощью функции list ([<Последовательность>]) можно обработать любой итерируемый объект (например, строку):
-
-Функция позволяет преобразовать mобую последовательность в список. Если параметр не указан, то создается пустой crmcoк.
-
-        # Создаем пустой список
-        print list()
-
-        # Преобразуем строку в список
-        print list("String")
-
-        # Преобразуем кортеж в список
-        print list((1, 2, 3, 4, 5))
-
-2. Список можно задать перечислением элементов списка в квадратных скобках, например, список можно задать так:
-
-        Primes = [2, 3, 5, 7, 11, 13]
-        Rainbow = ['Red', 'Orange', 'Yellow', 'Green', 'Blue', 'Indigo', 'Violet']
-
-В списке Primes — 6 элементов, а именно: Primes[0] == 2, Primes[1] == 3, Primes[2] == 5, Primes[3] == 7, Primes[4] == 11, Primes[5] == 13. Список Rainbow состоит из 7 элементов, каждый из которых является строкой.
-
-Также как и символы в строке, элементы списка можно индексировать отрицательными числами с конца, например, Primes[-1] == 13, Primes[-6] == 2.
-
-        arr = [1, "str", 3, "4"]
-        print arr
-
-3. заполнив список поэлементно с помошью метода append( ):
-
-        # Создаем пустой список
-        arr = []
-
-        # Добавляем элементl (индекс О)
-        arr.append(1)
-
-        # Добавляем элемент2 (индекс 1)
-        arr.append("str")
-
-        print arr
-
-В Python все эти способы приведут к ошибке:
-
-        arr = []
-        >>> arr[] = 10 # SyntaxError: invalid syntax
-        >>> arr[0] = 10 # Traceback
-        arr[0] = 11; # IndexErrcr
-
-При создании списка в переменной сохраняется ссылка на объект, а не сам объект. Это обя­зательно следует учитывать при групповом присваивании. Групповое присваивание можно использовать для чисел и строк, но для списков этого делать нельзя.
-
-        # Якобы создали два объекта
-        >>> х = у = [1, 2]
-        >>> х, у # ([1, 2), [1, 2))
-
-мы создали список из двух элементов и присвоили значение переменным х и у. Теперь попробуем изменить значение в переменной у:
-
-        # Изменяем второй элемент
-        # Изменилось значение сразу в двух переменных
-        >>> y[1] = 100
-        >>> х, у # ([1, 100], [1,100])
-
-изменение значения в переменной у привело также к изменению значения в переменной х.Таким образом, обе переменные ссылаются на один и тот же объект, а не на два разных объекта. Чтобы получить два объекта, необходимо производить раз­дельное присваивание:
-
-        >>> х, у = [1, 2] ,[1, 2]
-        # Изменяем второй элемент
-        >>> y[1] = 100
-        >>> х, у # ([1, 2], [1, 100])
-
-Точно такая же ситуация возникает при использовании оператора повторения *. Например, в следующей инструкции производится попытка создания двух вложенных списков с по­мощью оператора *:
-
-        # Якобы создали два вложенных списка с по­мощью оператора *
-        >>> arr = [[]]*2
-        >>> arr # [[], []]
-        # Добавляем элемент
-        >>> arr[0].append(5)
-        # Изменились два элемента
-        >>> arr[[5],[5]]
-
-Создавать вложенные списки следует с помощью метода append() внутри цикла:
-
-        arr = []
-        for i in range(2): arr.append([])
-        print(arr)
-
-        arr[0].append(5)
-        print(arr)
-
-Можно также воспользоваться генераторами списков:
-
-        >>> arr = [ [] for i in range(2) ]
-        >>> arr
-        [[], []]
-        >>> arr[O].append(5); arr
-
-Проверить, ссылаются ли две переменные на один и тот же объект, позволяет оператор is.
-Если переменные ссылаются на один и тот же объект, то оператор is возвращает значение True:
-
-        >>> х = у = [1, 2]
-        # Неправильно
-        >>> х is у # Переменные содержат ссылку на один и тот же список True
-        >>> х, у = [ 1, 2] , [ 1, 2] # Правильно
-        >>> х is у # Это разные объекты False
-
-# Меняем данные
-после создания кортежа в Python нельзя менять его структуру. Однако вы сможете управлять данными внутри него.
-
-                a = [] # пустой список
-                b = {} # пустой словарь
-                c = (a, b) # наш кортеж с данными
-                print(c) # получим на выводе ([], {})
-                a.append('ROOT') # добавили новое значение в список
-                b['name'] = 'Bob' # новое значение в словарь
-                print(c) # (['ROOT'], {'name': 'Bob'})
-
-# tuple() и list()
-
-Функция list() создает список из элементов кортежа. Пример:
-
-                a = (1,2,3,4,5, [1,2]) # наш кортеж
-                b = list(a) # преобразование в список
-                print(b) # вывод списка [1, 2, 3, 4, 5, [1, 2]]
-
-Функция tuple() берет в качестве аргумента строку или список и превращает его в кортеж:
-
-                >>> tuple('abc')
-                ('a', 'b', 'c')
-
-                a = [1,2,3,4,5] # наш список
-                b = tuple(a) # преобразование в кортеж
-                print(b) # вывод кортежа (1, 2, 3, 4, 5)
-
-# Функция range()
-
-Чтобы получить доступ к каждому элементу, можно, например, для генерации индексов воспользоваться функцией range(). Функция возвращает объект-диапазон, подцерживаю­щий итерации, а с помощью диапазона внутри цикла for можно получить текущий индекс.
-## Функция range() имеет следующий формат:
-                    range ( [<Начало>, ] <Конец> [, <Шаг>] )
-
-Первый параметр задает начальное значение. Если параметр <Начало> не указан, то по умолчанию используется значение 0. Во втором параметре указывается конечное значение. Следует заметить, что это значение не входит в возвращаемый диапазон значений. Если параметр <Шаг> не указан, то используется значение 1. Для примера умножим каждый эле­мент списка на 2:
-
-                        arr = [1,2,3,4,5,6,7]
-
-                        for i in range(len(arr)):
-                            arr[i] *= 2
-                        print(arr)
-
-Можно также воспользоваться функцией enumerate( <Объект> [, start=O] ) , которая на каж­дой итерации цикла for возвращает кортеж из индекса и значения текущего элемента списка. Умножим каждый элемент списка на 2:
-
-                        arr = [1,2,3,4,5,6,7]
-                        for i, elern in enumerate(arr):
-                            arr[i] *= 2
-
-                        print(arr)
-
-Кроме того, перебрать элементы можно с помощью цикла while. Но в этом случае следует помнить, что цикл while работает медленнее цикла for. Для примера умножим каждый элемент списка на 2, используя цикл while:
-
-                        i, c = 0, len(arr)
-                        while i < c:
-                            arr[i] *= 2
-                            i += 1
-
-                        print(arr)
-
-## отсортируем слова в предложении в порядке их длительности:
-
-                        words = ' to perform the task of sorting the words in a string by their length'.split()
-
-                        wordlens = [(len(word), word) for word in words]
-                        wordlens.sort()
-                        print(' '.join(w for (_, w) in wordlens))
-
-# Генераторы списков
-
-Помимо обычных операций над последовательностями и методов списков Python предоставляет возможность выполнять более сложные операции над списками, известные как выражения генераторов списков (list comprehension expression)
-
-# Генераторы списков и выражения-генераторы
-                        arr = [1,2,3,4,5,6,7]
-
-                        for i in range(len(arr)):
-                            arr[i] *= 2
-                        print(arr)
-
-С помощью генераторов списков тот же самый код можно записать более компактно. По­мимо компактного отображения, польза здесь также и в том, что генераторы списков рабо­тают быстрее цикла for. Однако вместо изменения исходного списка возвращается новый список:
-
-                        arr = [ i * 2 for i in arr]
-                        print(arr)
-
-Как видно из примера, мы помеспши цикл for внутри квадратных скобок, а также измени­ли порядок следования параметров, - инструкция, выполняемая внутри цикла, находится перед циклом. Обратите внимание и на то, что выражение внутри цикла не содержит опера­тора присваивания - на каждой итерации цикла будет генерироваться новый элемент, ко­торому неявным образом присваивается результат выnолнения выражения внутри цикла.
-В итоге будет создан новый список, содержащий измененные значения элементов исходного списка.
-
-Генераторы списков могут иметь сложную структуру. Например, состоять из нескольких вложенных циклов for и (или) содержать оператор ветвления if после цикла.
-Для примера получим четные элементы списка и умножим их на 10 :
-
-                        arr = [ i * 10 for i in arr if i % 2 == 0]
-                        print(arr)
-
-Получим четные элементы вложенного списка и умножим их на 1 О:
-
-                        arr = [ [1, 2], [3, 4], [5, 6] ]
-                        arr = [ j * 10 for i in arr for j in i if j % 2 == 0 ]
-
-                        print(arr)
-
-Последовательность выполнения этого кода эквивалентна последовательности выполнения следующего кода:
-
-                        arr = []
-                        for i in [ [ 1, 2) , [ 3, 4) , [ 5, 6) ) :
-                            for j in i:
-                                if j % 2 = О:
-                                    # Если число четное
-                                    arr.append(j * 10) # Добавляем элемент
-                        # Результат вьmолнения:
-                        print (arr)
-                        [20, 40, 60)
-
-Если выражение разместить внутри не квадратных, а круглых скобок, то будет возвращать­ся не список, а итератор. Такие конструкции называются выражениями-генераторами.
-
-В качестве примера просуммируем четные числа в списке:
-
-                        arr = [1, 4, 12, 45, 10]
-                        print(sum( ( i for i in arr if i % 2 ==0) ))
-
-                        combs = []
-                        for x in [1,2,3]:
-                            for y in [3,1,4]:
-                                if x != y:
-                                    combs.append((x, y))
-
-                        print(combs)
-
-                        print([(x, y) for x in [1,2,3] for y in [3,1,4] if x != y])
-                        # [(1, 3), (1, 4), (2, 3), (2, 1), (2, 4), (3, 1), (3, 4)]
-
-                        vec = [[1,2,3], [4,5,6], [7,8,9]]
-                        print([num for elem in vec for num in elem])
-                        # [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-Генераторы списков представляют эффективный способ обработки таких структур, как матрица. Предположим, например, что нам требуется извлечь из нашей матрицы второй столбец. Строку легко можно получить, выполнив операцию индексирования, потому что матрица хранится в виде строк, однако, благодаря генераторам списков, получить столбец ничуть не сложнее:
-
-                        # -*- coding:utf-8 -*-
-                        M = [ # Матрица 5 x 5 в виде вложенных списков
-                            [1,2,3,4,5], # Выражение в квадратных скобках может
-                            [1,2,3,4,5],
-                            [1,2,3,4,5],
-                            [1,2,3,4,5],
-                            [1,2,3,4,5], # занимать несколько строк
-                            ]
-
-                        print(M)
-
-                        col2 = [row[1] for row in M] # Выбирает элементы второго столбца
-                        print(col2)
-
-                        print(M) # Матрица не изменилась
-
-
-Генераторы списков следуют традиции системы представления множеств; они позволяют создавать новые списки, выполняя выражение для каждого элемента в последовательности, по одному за раз, слева направо. Генераторы списков заключены в  квадратные скобки (чтобы отразить тот факт, что они создают список) и составлены из выражения и конструкции цикла, которые используют одно и то же имя переменной (в данном случае row). В предыдущем примере генератор списков интерпретируется так: «Получить элементы row[1] из каждой строки матрицы M и создать из них новый список». Результатом является новый список, содержащий значения из второго столбца матрицы.
-
-На практике генераторы списков могут приобретать еще более сложную форму:
-                        M = [ # Матрица 5 x 5 в виде вложенных списков
-                            [1,2,3,4,5], # Выражение в квадратных скобках может
-                            [1,4,3,4,5],
-                            [1,5,3,4,5],
-                            [1,7,3,4,5],
-                            [1,8,3,4,5], # занимать несколько строк
-                            ]
-
-                        print([row[1] + 1 for row in M]) # Добавить 1 к каждому элементу в столбце 2
-
-                        print([row[1] for row in M if row[1] % 2 == 0]) # отфильтровать нечетные значения
-
-Первая операция в этом примере прибавляет 1 к значениям всех отобранных элементов, а  вторая использует условный оператор if для исключения из результата нечетных чисел с помощью операции деления по модулю – % (остаток от деления). Генераторы списков, применяемые к спискам, возвращают в качестве результатов новые списки, но могут использоваться и для любых других объектов, допускающих выполнение итераций. Например, ниже показано использование генератора списков для обхода жестко заданного в программном коде списка координат и строк:
-
-                        diag = [ M[i][i] for i in [0, 1, 2, 3, 4]] # Выборка элементов диагонали матрицы
-                        print(diag)
-
-                        doubles = [c * 2 for c in 'spam'] # Дублирование символов в строке
-                        print(doubles)
-
-как с помощью встроенной функции sum можно суммировать элементы в последовательности:
-
-                        G = (sum(row) for row in M) # Генератор, возвращающий суммы элементов строк
-                        print(next(G))
-                        print(next(G)) # Вызов в соответствии с протоколом итераций
-
-## calc16.py
-
-        ops = ('+','-','*','/','//','%','**')
-        titles = ('Select operation:', "Usage operation:")
-        choices = ("Calculate", "Help", "Quit" )
-        helpers = ('Display this usage message', 'Example: 55 % 7', 'Exit programm')
-        gup = ': '
-
-        def menu():
-
-            print 'Super Calc'.upper().center(30, '=')
-            print("_"*30)
-            print('| '+ titles[0].ljust(27,' ')+ '|')
-            for item in choices:
-                print('| '+ item[0].lower()+ gup + item.ljust(24,' ')+ '|')
-
-            print("="*30)
-            choice = raw_input("| Enter choice(h|c|q):".title())
-            return str(choice) if choice != '' else 'h'
-
-        def myhelp():
-            print("_"*50)
-            print('| '+ titles[1].ljust(47,' ')+ '|')
-            list1 = list()
-            for i in range(len(helpers)):
-                list1.append(choices[i]+' - ' + helpers[i])
-
-            for item in list1:
-                print('| '+ item[0].lower()+ gup + item.ljust(43,' ')+ ' |')
-
-            print("_"*50)
-
-
-## calc17.py
-
-            listLen = [ len(i) for i in list1 ]
-            print max(listLen)
 
             def menu():
+                tupleLen = [len(i) for i in choices]
+                width = max(max(tupleLen), len(titles[0]))
 
-                tupleLen = [ len(i) for i in choices ]
-                width = max(max(tupleLen),len(titles[0]))
+                print 'phonegup'.upper().center(width+7, '=')
+                printMenu(width, 0, choices)
 
-                print 'Super Calc'.upper().center(width+7, '=')
-                print("_"*(width+7))
-                print('| '+ titles[0].ljust(width+3,' ')+ ' |')
+                choiceList = [item[0].lower() for item in choices]
+                choiceList = ' | '.join(choiceList)
 
-                for item in choices:
-                    print('| '+ item[0].lower()+ gup + item.ljust(width,' ')+ ' |')
-
-                print("="*(width+7))
-                choice = raw_input("| Enter choice(h|c|q):".title())
+                choice = raw_input("Enter choice "+choiceList+':>')
                 return str(choice) if choice != '' else 'h'
+
 
             def myhelp():
                 list1 = list()
                 for i in range(len(helpers)):
                     list1.append(choices[i]+' - ' + helpers[i])
 
-                listLen = [ len(i) for i in list1 ]
-                print("_"*(max(listLen)+7))
-                print('| '+ titles[1].ljust(max(listLen)+3,' ')+ ' |')
-
-                for item in list1:
-                    print('| '+ item[0].lower()+ gup + item.ljust(max(listLen),' ')+ ' |')
-
-                print("="*(max(listLen)+7))
-
-## calc18.py
-
-        def printMenu(w,j,obj):
-            print("_"*(w+7))
-            print('| '+ titles[j].ljust(w+3,' ')+ ' |')
-
-            for item in obj:
-                print('| '+ item[0].lower()+ gup + item.ljust(w,' ')+ ' |')
-
-            print("="*(w+7))
-
-
-        def menu():
-
-            tupleLen = [ len(i) for i in choices ]
-            width = max(max(tupleLen),len(titles[0]))
-
-            print 'Super Calc'.upper().center(width+7, '=')
-            printMenu(width,0,choices)
-
-            choice = raw_input("| Enter choice(h|c|q):".title())
-            return str(choice) if choice != '' else 'h'
-
-        def myhelp():
-            list1 = list()
-            for i in range(len(helpers)):
-                list1.append(choices[i]+' - ' + helpers[i])
-
-            listLen = [ len(i) for i in list1 ]
-            printMenu(max(listLen),1,list1)
-
-
-            def printMenu(w,j,obj):
-                gup = (': ','| ')
-
-                print("_"*(w+7))
-                print(gup[1]+ titles[j].ljust(w+3,' ')+ gup[1][::-1])
-
-                for item in obj:
-                    print(gup[1]+ item[0].lower()+ gup[0] + item.ljust(w,' ')+ gup[1][::-1])
-
-                print("="*(w+7))
-
-
-# copy
-
-Первый способ заключается в применении операции извлечения среза, второй - в использовании функции list, а тре­тий - в применении появившегося в Python 3.3 метода сору.
-
-        >>> х = [1, 2, 3, 4, 5) # Создали список
-        >>>#Создаем копию списка
-        >>> у= list(x) # или с помощью среза: у= х[:]
-        # или вызовом метода сору(): у= х.сору()
-
-        >>> у
-        [1, 2, 3, 4, 5)
-        >>> х is у # Оператор показывает, что это разные объекты False
-        >>> y[l] = 100 # Изменяем второй элемент
-        >>> х, у
-        # Изменился только список в переменной у
-        ( [ 1, 2, 3, 4, 5] , [ 1, 100, 3, 4, 5] )
-
-На первый взгляд может показаться, что мы получили копию - оператор is показывает, что это разные объекты, а изменение элемента затронуло лmnь значение переменной у.
-В данном случае вроде все нормально. Но проблема заключается в том, что списки в языке Python могут иметь неограниченную степень вложенности. Рассмотрим это на примере:
-
-        >>> х = [1, [2, 3, 4, 5]] # Создали вложенный список
-        # Якобы сделали копию списка
-        >>> у= list(x)
-        # Разные объекты
-        >>> х is у # False
-        >>> y[l] [1] = 100
-        # Изменяем элемент
-        # Изменение затронуло переменную х!! !
-
-        >>> х, у
-        ([1,[2, 100, 4, 5]],[1,[2, 100, 4, 5]])
-
-В этом примере мы создали список, в котором второй элемент является вложенным спи­ском. Далее с помощью функции list() попытались создать копию списка. Как и в преды­дущем примере, оператор is показывает, что это разные объекты, но посмотрите на резуль­тат. Изменение переменной y затронуло и значение переменной х. Таким образом, функция list  и операция извлечения среза создают лишь поверхностную копию списка.
-
-# deepcopy
-
-Чтобы получить полную копию списка, следует воспользоваться функцией deepcopy() из модуля сору.
-
-        # -*- coding:utf-8 -*-
-
-        import copy # Подкточаем модуль сору
-
-        x = [1,[2,3,4,5]] # Создали вложенный список
-
-        # делаем полную копию списка
-        y = copy.deepcopy(x)
-
-        # Изменяем второй элемент
-        y[1][1] = 100
-
-        # Изменился только список в переменной у
-        print(x, y) # [1, [2, 3, 4, 5]] [1, [2, 100, 4, 5]]
-
-Функция deepcopy() создает копию каждого объекта, при этом сохраняя внутреннюю струк­туру списка. Иными словами, если в списке существуют два элемента, ссылающиеся на один объект, то будет создана копия объекта, и элементы будут ссылаться на этот новый объект, а не на разные объекты.
-
-        # Подключаем модуль сору
-        import сору
-        x = [1,2]
-        y = [x,x]
-        print(x, y) # два элемента ссылаются на один объект
-
-        z = copy.deepcopy(y) # Сделали копию списка
-        print(z)
-
-        print(z[0] is x, z[1] is x, z[0] is z[1])
-
-        z[0][0] = 300 # Изменили один элемент
-
-        print(z) # Значение изменилось сразу в двух элементах!
-
-        print(x) # Начальный список не изменился
-
-# Операции над списками / последовательностями
-
-## len(s) - Длина последовательности s
-
-Обращение к элементам списка осуществляется с помощью квадратных скобок, в которых указывается индекс элемента. Нумерация элементов списка начинается с нуля. Выведем все элементы списка:
-
-        x = [1,[2,3,4,5]]
-        print(len(x)) # 2
-        print(x[0], x[1][0], x[1][3]) # 1 2 5
-
-С помощью позиционного присваивания можно присвоить значения элементов списка ка­ким-либо переменным. Количество элементов справа и слева от оператора = должно совпа­дать, иначе будет выведено сообщение об ошибке:
-
-        x = [1,[2,3,4,5]]
-        print(len(x)) # 2
-
-        print(x[0],x[1][0],x[1][3]) # 1 2 5
-
-        y, z = [1,[2,3,4,5]], ['str1', 10, [32,33,34,35]]  # Позиционное присваивание
-        # Количество элементов должно совпадать
-        print(len(y)) # 2
-        print(len(z)) # 3
-
-В Python 3 при позиционном присваивании перед одной из переменных слева от операто­ра = можно указать звездочку. В этой переменной будет сохраняться список, состоящий из «лишних» элементов. Если таких элементов нет, то список будет пустым:
-
-        x, *y, z = [1,2,3,4,5]
-
-        print(x,y,z) # 1 [2, 3, 4] 5
-
-        x, *y, z = [1,[2,3,4,5]]
-
-        print(x,y,z) # 1 [] [2, 3, 4, 5]
-
-Так как нумерация элементов списка начинается с 0, индекс последнего элемента будет на единицу меньше количества элементов.
-
-        x, *y, z = [1,[2,3,4,5]]
-        print(x,y,z) # 1 [] [2, 3, 4, 5]
-
-        print(len(z)) # Получаем количество элементов
-        print(z[len(z)-1]) # Получаем последний элемент
-
-## phoneGup1.py
-
-        # -*- coding:utf-8 -*-
-        # ---------- PhoneGup ----------
-        '''
-         Program make a simple phonegup that can add, view, modify, delete and save the records
-        '''
-        titles = ('Select operation:', "Usage operation:")
-
-        choices = ( "Help", 'Print Phone Numbers', 'Add a Phone Number', 'Remove a Phone Number', 'Lookup a Phone Number', 'Save Phone Numbers', "Quit" )
-
-        helpers = ('Display this usage message', 'Print Phone Numbers','Add a Phone Number', 'Remove a Phone Number', 'Lookup a Phone Number', 'Save Phone Numbers', 'Exit programm')
-
-        def printMenu(w,j,obj):
-            gup = (': ','| ')
-            print("_"*(w+7))
-            print(gup[1]+ titles[j].ljust(w+3,' ')+ gup[1][::-1])
-            for item in obj:
-                print(gup[1]+ item[0].lower()+ gup[0] + item.ljust(w,' ')+ gup[1][::-1])
-            print("="*(w+7))
-
-        def menu():
-            tupleLen = [ len(i) for i in choices ]
-            width = max(max(tupleLen),len(titles[0]))
-            print 'phonegup'.upper().center(width+7, '=')
-            printMenu(width,0,choices)
-            choiceList = [ item[0].lower() for item in choices ]
-            choiceList = ' | '.join(choiceList)
-            choice = raw_input("Enter choice "+choiceList+':>')
-            return str(choice) if choice != '' else 'h'
-
-        def myhelp():
-            list1 = list()
-            for i in range(len(helpers)):
-                list1.append(choices[i]+' - ' + helpers[i])
-            listLen = [ len(i) for i in list1 ]
-            printMenu(max(listLen),1,list1)
-
-        phone_list = [
-            ['Bob','1234567'],
-            ['Mary','2345671'],
-        ]
-
-        def print_numbers(numbers):
-            print("Phone Numbers in PhoneGup:")
-            for item in numbers:
-                print "Name:", item[0], "\tNumber:", item[1]
-            print
-
-        while True:
-            choice = menu()
-            if choice == 'q':
-                print('{!s:#^40}'.format('Thankyou for using phoneGup.py!'))
-                break
-            if choice == 'h':
-                myhelp()
-                continue
-            if choice == 'p':
-                print_numbers(phone_list)
-            else:
-                myhelp()
-                continue
-
-# Срезы
-
-item[START:STOP:STEP] - берёт срез от номера START, до STOP (не включая его), с шагом STEP.
-По умолчанию START = 0, STOP = длине объекта, STEP = 1. Соответственно, какие-нибудь (а возможно, и все) параметры могут быть опущены.
-
-        a = [1, 3, 8, 7]
-
-        print(a[:]) # [1, 3, 8, 7]
-
-        print(a[1:]) # [3, 8, 7]
-
-        print(a[:3]) # [1, 3, 8]
-
-        print(a[::2]) # [1, 8]
-
-        # Получим первые два элемента списка:
-        a[0:2]
-        # Символ с индексом 2 не входит в диапазон
-
-Также все эти параметры могут быть и отрицательными:
-
-        a = [1, 3, 8, 7, 9]
-
-        a[1:] # Без первого элемента
-        a[:-1] # Без последнего элемента
-
-        # выведем символы в обратном порядке:
-        print(a[::-1]) # [9, 7, 8, 3, 1]
-
-        print(a[:-2]) # [1, 3, 8]
-
-        print(a[-2::-1]) # [7, 8, 3, 1]
-
-        # Последний элемент списка
-        print(a[-1]) # 9
-
-        print(a[1:4:-1]) # []
-
-
-В последнем примере получился пустой список, так как START < STOP, а STEP отрицательный. То же самое произойдёт, если диапазон значений окажется за пределами объекта:
-
-        >>> a = [1, 3, 8, 7]
-        >>> a[10:20]
-        []
-
-Также с помощью срезов можно не только извлекать элементы, но и добавлять и удалять элементы (только для изменяемых последовательностей). Если срезу присвоить пустой список, то элементы, попавшие в срез, будут удалены:
-
-        a[1:3] = [0, 0, 0]
-        print(a) # [1, 0, 0, 0, 7, 9]
-
-        del a[:-3]
-        print(a) # [0, 7, 9]
-
-получим поверхностную копию списка:
-
-        arr = [1, 2, 3, 4, 5]
-        m = arr[:); m # Создаем поверхностную копию и выводим значения
-        [1, 2, 3, 4, 5]
-        m is arr
-        # Оператор is показывает, что это разные объекты
-        False
-
-# x in s
-Проверка принадлежности элемента последовательности. В новых версиях Python можно проверять принадлежность подстроки строке. Возвращает True или False
-
-    x not in s = not x in s
-
-    2 in (1, 2, 3, 4, 5], 6 in [1, 2, 3, 4, 5] # Проверка на вхождение
-
-# Конкатенация последовательностей
-
-Соединить два списка в один список позволяет оператор+. Результатом объединения будет новый список:
-
-        arrl = [1, 2, 3, 4, 5)
-        arr2 = [ 6, 7, 8, 9)
-        arrЗ = arrl + arr2
-        arr3
-        [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
-Вместо оператора + можно использовать оператор +=
-элементы добавляются в текущий список:
-
-        arr = [1, 2, З, 4, 5)
-        arr += [6, 7, 8, 9]
-        arr
-        2, З, 4, 5, 6, 7, 8, 9]
-
-
-# Операция повторения
-
-    s*n или n*s
-
-Последовательность из n раз повторенной s. Если n < 0, возвращается пустая последовательность.
-
-Возвращает i-й элемент s или len(s)+i-й, если i < 0
-        s[i]
-Срез из последовательности s от i до j с шагом d
-        s[i:j:d]
-Наименьший элемент s
-        min(s)
-
-Наибольший элемент s
-        max(s)
-
-i-й элемент списка s заменяется на x
-        s[i] = x
-
-Срез от i до j (с шагом d) заменяется на (список) t
-        s[i:j:d] = t
-
-## Удаление элементов среза из последовательности
-
-    del s[i:j:d]
-
-# Методы для работы с последовательностями
-
-- append(x) Добавляет элемент в конец последовательности
-- count(x) Считает количество элементов, равных x
-- extend(s) Добавляет к концу последовательности последовательность s
-- index(x) Возвращает наименьшее i, такое, что s[i] == x. Возбуждает исключение ValueError, если x не найден в s
-- insert(i, x) Вставляет элемент x в i-й промежуток
-- pop([i]) Возвращает i-й элемент, удаляя его из последовательности
-- reverse() Меняет порядок элементов s на обратный
-- sort([cmpfunc]) Сортирует элементы s. Может быть указана своя функция сравнения cmpfunc
-
-Списки в  языке Python являются аналогом массивов в  других языках программирования, но они обладают более широкими возможностями. С  одной стороны, они не ограничены одним типом элементов. Кроме того, размер списков не ограничен, благодаря чему они могут увеличиваться и уменьшаться по мере необходимости в результате выполнения операций, характерных для списков:
-
-## Увеличение: в конец списка добавляется новый объект
-        >>> L.append(‘NI’)
-        >>> L
-        [123, ‘spam’, 1.23, ‘NI’]
-        >>> L.pop(2)
-        1.23
-## Уменьшение: удаляется элемент из середины списка
-        >>> L
-## Инструкция “del L[2]” также удалит элемент списка
-        [123, ‘spam’, ‘NI’]
-
-## Добавление элементов в список
-
-        a_list = ['a']
-        a_list =a_list + [2.0, 3]
-        a_list
-        ['a', 2.0, 3]
-        a_list.append(True)
-        a_list.extend(['four','Ω'])
-
-## Элемент можно добавить в произвольную позицию списка с помощью метода insert:
-        a_list.insert(0, 'Ω')
-
-## Удаление элементов из списка
-
-        a_list =['a', 'b', 'new', 'mpilgrim', 'new']
-        del a_list[1]
-
-        a_list.remove('new')
-
-        a_list.pop()
-
-        a_list.pop(0)
-
-## phoneGup2.py
-
-        phone_list = [
-            ['Bob','1234567'],
-            ['Mary','2345671'],
-        ]
-
-        def print_numbers(numbers):
-            print("Phone Numbers in PhoneGup:")
-            for item in numbers:
-                print "Name:", item[0], "\tNumber:", item[1]
-            print
-
-        def add_number(name, number):
-            phone_list.append([name, number])
-
-        while True:
-
-            choice = menu()
-
-            if choice == 'q':
-                print('{!s:#^40}'.format('Thankyou for using phoneGup.py!'))
-                break
-            if choice == 'h':
-                myhelp()
-                continue
-
-            if choice == 'p':
-                print_numbers(phone_list)
-
-            elif choice == 'a':
-                print("Add Name and Number")
-                name = raw_input("Name: ")
-                phone = raw_input("Number: ")
-                add_number(name, phone)
-
-            else:
-                myhelp()
-                continue
-
-
-
-# Стек и очереди
-
-Список можно использовать как стек
-
-когда последний добавленный элемент извлекается первым (LIFO, last-in, first-out). Для извлечения элемента с вершины стека есть метод pop():
-
-        stack = [1,2,3,4,5]
-        stack.append(6)
-        stack.append(7)
-        stack.pop()
-        stack
-
-## Список можно использовать как очередь
-
-элементы извлекаются в том же порядке, в котором они добавлялись (FIFO, first-in, first-out). Для извлечения элемента используется метод pop() с индексом 0:
-
-        queue = ['rock','in','roll']
-        queue.append('alive')
-        queue.pop(0)
-        queue
-        ['in', 'roll', 'alive']
-
-
-метод append увеличивает размер списка и вставляет в конец новый элемент. Метод pop (или эквивалентная ему инструкция del) удаляет из списка элемент с заданным смещением, что приводит к уменьшению списка.
-
-Другие методы списков позволяют вставлять новые элементы в произвольное место списка (insert), удалять элемент, заданный значением (remove), и так далее. Так как списки являются изменяемыми, большинство методов списков не создают новый список, а изменяют оригинальный список:
-
-        >>> M = [‘bb’, ‘aa’, ‘cc’]
-        >>> M.sort()
-        >>> M
-        [‘aa’, ‘bb’, ‘cc’]
-        >>> M.reverse()
-        >>> M
-        [‘cc’, ‘bb’, ‘aa’]
-
-Метод sort по умолчанию упорядочивает элементы списка по возрастанию, а метод reverse – по убыванию. В обоих случаях происходит непосредственное изменение самого списка.
-
-# Поиск значений в списке
-
-        a_list.count('new')
-        'new' in a_list
-        'new' not in a_list
-        a_list.index('mpilgrim')
-
-
-# Проверка выхода за границы
-
-Хотя списки не имеют фиксированного размера, язык Python, тем не менее, не допускает возможности обращаться к несуществующим элементам списка. Обращение к элементам списка по индексам, значения которых выходят за пределы списка, всегда является ошибкой:
-
-Если элемент, соответствующий указанному индексу, отсутствует в списке, то возбуждает­ся исключение IndexError:
-
-## Обращение к несуществующему элементу
-        > arr = [1, 2, 3, 4, 5]
-        >>> arr[5)
-        Traceback (most recent
-        File "<pyshell#99>",
-        arr[5]
-        IndexError: list index
-
-
-# Вложенные списки
-
-Одна из замечательных особенностей базовых типов языка Python состоит в том, что они поддерживают возможность создания вложенных конструкций произвольной глубины и  в любых комбинациях (например, можно создать список, содержащий словарь, который содержит другой список, и так далее).
-Одно из очевидных применений этой особенности – представление матриц, или «многомерных массивов» в языке Python. Делается это с помощью списка, содержащего вложенные списки:
-
-    M = [ # Матрица 5 x 5 в виде вложенных списков
-        [1,2,3,4,5], # Выражение в квадратных скобках может
-        [1,2,3,4,5],
-        [1,2,3,4,5],
-        [1,2,3,4,5],
-        [1,2,3,4,5], # занимать несколько строк
-        ]
-
-    print(M) # [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5], [1, 2, 3, 4, 5]]
-
-    print(len(M)) # 5
-
-Обращаться к такой структуре можно разными способами:
-
-        print(M[1]) # Получить строку 2
-
-        print(M[1][2]) # Получить строку 2, а затем элемент 3 в этой строке
-
-Первая операция в  этом примере возвращает вторую строку целиком, а  вторая  – третий элемент в  этой строке.
-
-# Многомерные списки
-
-Любой элемент списка может содержать объект произвольного типа. Например, элемент списка может быть числом, строкой, списком, кортежем, словарем и т. д. Создать вложен­ный список можно, например, так:
-
-Элементы вложенного списка также могут иметь элементы произвольного типа. Количество вложений не ограничено. То есть, мы можем создать объект тобой степени сложности. В этом случае для доступа к элементам указывается несколько индексов подряд.
-
-        >>> arr = [ [1, ["а", "b"], 3), [4, 5, 6], [7, 8, 9] ]
-        >>> arr[O][1][О]
-
-# Перебор элементов списка
-
-Перебрать все элементы списка можно с помощью цикла for:
-
-        >>> arr = [1, 2, З, 4, 5]
-        >>> for i in arr: print(i, end=" ")
-        1 2 З 4 5
-
-Следует заметить, что переменную i внутри цикла можно изменить, но если она ссылается на неизменяемый тип данных (например, число или строку), то это не отразится на исход­ном списке:
-
-        arr = [1,2,3,4,5,6,7]
-        for i in arr: i += 10; print(i, end = " ")
-        # Элементы имеют неизменяемьnir тип (число)
-        # Список не изменился
-        print(arr)
-
-
-        arr = [[1,2],[3,4],[5,6],[7,8]]
-
-        for i in arr: i[0] += 10; print(i, end = " ")
-        # Элементы имеют изменяемьnir тип (список)
-        # Список изменился
-        print(arr) # [11, 2] [13, 4] [15, 6] [17, 8] [[11, 2], [13, 4], [15, 6], [17, 8]]
-
-
-# Nested List Comprehensions
-
-        # -*- coding:utf-8 -*-
-
-        matrix = [
-            [1, 2, 3, 4],
-            [5, 6, 7, 8],
-            [9, 10, 11, 12],
-        ]
-
-        print(matrix)
-        # transpose rows and columns:
-
-        print([[row[i] for row in matrix] for i in range(4)])
-        # [[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
-
-
-        transposed = []
-        for i in range(4):
-            transposed.append([row[i] for row in matrix])
-
-        print(transposed)
-        # [[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
-
-        # which, in turn, is the same as:
-
-        transposed = []
-        for i in range(4):
-            # the following 3 lines implement the nested listcomp
-            transposed_row = []
-            for row in matrix:
-                transposed_row.append(row[i])
-            transposed.append(transposed_row)
-
-        print(transposed)
-        # [[1, 5, 9], [2, 6, 10], [3, 7, 11], [4, 8, 12]]
-
-# Decart
-
-        colors = ['black', 'white']
-        sizes = ['S', 'M', 'L']
-        tabs = [(color, size) for color in colors for size in sizes]
-        print(tabs) # [('black', 'S'), ('black', 'M'), ('black', 'L'), ('white', 'S'), ('white', 'M'), ('white', 'L')]
-
-        for tab in ('%s %s' % (color, size) for color in colors for size in sizes):
-            print(tab)
-
-
-# Пример обработки двумерного массива
-
-Пусть дан квадратный массив из n строк и n столбцов. Необходимо элементам, находящимся на главной диагонали, проходящей из левого верхнего угла в правый нижний (то есть тем элементам a[i][j], для которых i==j) присвоить значение 1, элементам, находящимся выше главной диагонали – значение 0, элементам, находящимся ниже главной диагонали – значение 2. То есть необходимо получить такой массив (пример для n==4):
-
-        1 0 0 0
-        2 1 0 0
-        2 2 1 0
-        2 2 2 1
-
-Рассмотрим несколько способов решения этой задачи. Элементы, которые лежат выше главной диагонали – это элементы a[i][j], для которых i<j, а для элементов ниже главной диагонали i>j. Таким образом, мы можем сравнивать значения i и j и по ним определять значение A[i][j]. Получаем следующий алгоритм:
-
-        n = 4
-        a = [[0] * n for i in range(n)]
-        for i in range(n):
-            for j in range(n):
-                if i < j:
-                    a[i][j] = 0
-                elif i > j:
-                    a[i][j] = 2
+                listLen = [len(i) for i in list1]
+                printMenu(max(listLen), 1, list1)
+
+
+            def print_contacts(contacts):
+                print("All Contacts in PhoneGup:")
+                for item in contacts:
+                    print(
+                        "Name:", item['firstName'],
+                        "\tNumber:", item['phone']
+                        )
+                print
+
+
+            def add_contact(rec):
+                #  zip(*iterables) Make an iterator
+                # that aggregates elements from each of the iterables.
+                d = {x: y for (x, y) in zip(lookup, rec)}
+                contacts.append(d)
+
+
+            def look_contact():
+                fieldList = [item[0] for item in lookup]
+                look = raw_input("Enter Field "+' | '.join(fieldList)+':>')
+                return str(look) if (look != '' and look in fieldList) else 'h'
+
+
+            def print_contact(look):
+                for lookKey in lookup:
+                    if lookKey.startswith(look):
+                        serchKey = lookKey
+                key = 'phone'
+                search = raw_input("Enter Search String " + ':>')
+                for contact in contacts:
+                    if search.upper() in contact.get(serchKey).upper():
+                        print("Contact in PhoneGup:")
+                        print "%s %s phone is %s" % (contact.get('firstName'), contact.get('lastName'), contact.get(key))
+                        print
+
+
+            def makeList(prompt):
+                raw = raw_input(prompt + ":> ")
+                return newRecord.append(raw)
+
+
+            def save_contacts():
+                pass
+
+            while True:
+                choice = menu()
+
+                if choice == 'q':
+                    print('{!s:#^40}'.format('Thankyou for using phoneGup.py!'))
+                    break
+                if choice == 'h':
+                    myhelp()
+                    continue
+                if choice == 'p':
+                    print_contacts(contacts)
+                elif choice == 'a':
+                    newRecord = []
+                    tup1 = ("First Name", "Last Name", "Phone Number", "Address")
+                    print("Add New Record To PhoneGap")
+                    for prompt in tup1:
+                        makeList(prompt)
+                    add_contact(newRecord)
+                if choice == 'l':
+                    look = look_contact()
+                    if look == 'h':
+                        print 'Use f for First Name or l for LAst Name'
+                    else:
+                        print_contact(look)
+                if choice == 's':
+                    save_contacts()
                 else:
-                    a[i][j] = 1
-        for row in a:
-            print(' '.join([str(elem) for elem in row]))
-
-Данный алгоритм плох, поскольку выполняет одну или две инструкции if для обработки каждого элемента. Если мы усложним алгоритм, то мы сможем обойтись вообще без условных инструкций.
-
-Сначала заполним главную диагональ, для чего нам понадобится один цикл:
-
-        for i in range(n):
-            a[i][i] = 1
-
-Затем заполним значением 0 все элементы выше главной диагонали, для чего нам понадобится в каждой из строк с номером i присвоить значение элементам a[i][j] для j=i+1, ..., n-1. Здесь нам понадобятся вложенные циклы:
-
-    for i in range(n):
-        for j in range(i + 1, n):
-            a[i][j] = 0
-
-Аналогично присваиваем значение 2 элементам a[i][j] для j=0, ..., i-1:
-
-    or i in range(n):
-        for j in range(0, i):
-            a[i][j] = 2
-
-Можно также внешние циклы объединить в один и получить еще одно, более компактное решение:
-
-    n = 4
-    a = [[0] * n for i in range(n)]
-    for i in range(n):
-        for j in range(0, i):
-            a[i][j] = 2
-        a[i][i] = 1
-        for j in range(i + 1, n):
-            a[i][j] = 0
-    for row in a:
-        print(' '.join([str(elem) for elem in row]))
-
-А вот такое решение использует операцию повторения списков для построения очередной строки списка. i-я строка списка состоит из i чисел 2, затем идет одно число 1, затем идет n-i-1 число 0:
-
-    n = 4
-    a = [0] * n
-    for i in range(n):
-        a[i] = [2] * i + [1] + [0] * (n - i - 1)
-    for row in a:
-        print(' '.join([str(elem) for elem in row]))
-
-А можно заменить цикл на генератор:
-
-    n = 4
-    a = [0] * n
-    a = [[2] * i + [1] + [0] * (n - i - 1) for i in range(n)]
-    for row in a:
-        print(' '.join([str(elem) for elem in row]))
+                    continue
