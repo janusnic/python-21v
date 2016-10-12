@@ -1,308 +1,170 @@
-# python-21v unit 04
-# Словари в Python
-
-Словарь — это неупорядоченное множество пар ключ—значение. Когда вы добавляете ключ в словарь, вы также должны добавить и значение для этого ключа. (Значение всегда можно изменить позже.) Словари в Python оптимизированы для получения значения по известному ключу.
-
-        contacts = {
-            '1': {
-                'firstName': 'Alice',
-                'lastName': 'Foo',
-                'phone': '23411122',
-                'addr': '23 Foo drive',
-             },
-            '2': {
-                'firstName': 'Beth',
-                'lastName': 'Bar',
-                'phone': '23422255',
-                'addr': '44 Bar street',
-            },
-        }
-
-
-# in — оператор проверки вхождения.
-## Получить список всех телефона в базе данных по id:
-
-        def print_contacts(contacts):
-            print("All Contacts in PhoneGup:")
-            for id in contacts:
-                print(
-                    "Name:", contacts[id]['firstName'],
-                    "\tNumber:", contacts[id]['phone']
-                    )
-
-# How to change or add elements in a dictionary?
-
-Dictionary are mutable. We can add new items or change the value of existing items using assignment operator.
-
-If the key is already present, value gets updated, else a new key: value pair is added to the dictionary.
-
-## update([other]) 	— изменяет значение по key/value
-Update the dictionary with the key/value pairs from other, overwriting existing keys.
-                    def add_contact(firstName, lastName, phone, address):
-                        d = {
-                            'firstName': firstName,
-                            'lastName': lastName,
-                            'phone': phone,
-                            'address': address
-                            }
-
-                        contacts.update({2: d})
-
-# keys() — возвращает список ключей;
-
-        contacts = {
-            0: {
-                'firstName': 'Alice',
-                'lastName': 'Foo',
-                'phone': '23411122',
-                'address': '23 Foo drive',
-             },
-            1: {
-                'firstName': 'Beth',
-                'lastName': 'Bar',
-                'phone': '23422255',
-                'address': '44 Bar street',
-            },
-        }
-
-        print contacts.keys()
-        print len(contacts.keys())
-        print max(contacts.keys())
-
-## phoneGup4.py
-
-        def add_contact(firstName, lastName, phone, address):
-            d = {
-                'firstName': firstName,
-                'lastName': lastName,
-                'phone': phone,
-                'address': address
-                }
-
-            contacts.update({len(contacts): d})
-
-## phoneGup5.py
-
-            contacts = [
-                {
-                    'firstName': 'Alice',
-                    'lastName': 'Foo',
-                    'phone': '23411122',
-                    'address': '23 Foo drive',
-                 },
-                {
-                    'firstName': 'Beth',
-                    'lastName': 'Bar',
-                    'phone': '23422255',
-                    'address': '44 Bar street',
-                },
-            ]
-
-            def print_contacts(contacts):
-                print("All Contacts in PhoneGup:")
-                for item in contacts:
-                    print(
-                        "Name:", item['firstName'],
-                        "\tNumber:", item['phone']
-                        )
-                print
-
-
-            def add_contact(firstName, lastName, phone, address):
-                d = {
-                    'firstName': firstName,
-                    'lastName': lastName,
-                    'phone': phone,
-                    'address': address
-                    }
-
-                contacts.append(d)
-
-## phoneGup6.py
-
-        def look_contact():
-            fieldList = [item[0] for item in lookup]
-            fieldList = ' | '.join(fieldList)
-            look = raw_input("Enter Field "+fieldList+':>')
-            return str(look) if look != '' else 'h'
-
-        def print_contact(look):
-            key = 'phone'
-            search = raw_input("Enter Search String " + ':>')
-            for contact in contacts:
-                if search in contact['firstName']:
-                    print("Contact in PhoneGup:")
-                    print "%s %s phone is %s" % (contact['firstName'], contact['lastName'], contact[key])
-                    print
-
-
-## phoneGup7.py
-        def print_contact(look):
-            for lookKey in lookup:
-                if lookKey.startswith(look):
-                    serchKey = lookKey
-            key = 'phone'
-            search = raw_input("Enter Search String " + ':>')
-            for contact in contacts:
-                if search in contact[serchKey]:
-                    print("Contact in PhoneGup:")
-                    print "%s %s phone is %s" % (contact['firstName'], contact['lastName'], contact[key])
-                    print
-
-            if choice == 'l':
-                look = look_contact()
-                if look == 'h':
-                    print 'Use f for First Name or l for LAst Name'
-                else:
-                    print_contact(look)
-
-# get() — получает значение по ключу, в случае отсутствия дает None:
-                    d = {}
-                    print d.get('name')
-
-## phoneGup8.py
-                    def print_contact(look):
-                        for lookKey in lookup:
-                            if lookKey.startswith(look):
-                                serchKey = lookKey
-                        key = 'phone'
-                        search = raw_input("Enter Search String " + ':>')
-                        for contact in contacts:
-                            if search in contact.get(serchKey):
-                                print("Contact in PhoneGup:")
-                                print "%s %s phone is %s" % (contact.get('firstName'), contact.get('lastName'), contact.get(key))
-                                print
-
-## phoneGup8.py
-        def look_contact():
-            fieldList = [item[0] for item in lookup]
-            look = raw_input("Enter Field "+' | '.join(fieldList)+':>')
-            return str(look) if (look != '' and look in fieldList) else 'h'
-
-        def print_contact(look):
-            for lookKey in lookup:
-                if lookKey.startswith(look):
-                    serchKey = lookKey
-            key = 'phone'
-            search = raw_input("Enter Search String " + ':>')
-            for contact in contacts:
-                if search.upper() in contact.get(serchKey).upper():
-                    print("Contact in PhoneGup:")
-                    print "%s %s phone is %s" % (contact.get('firstName'), contact.get('lastName'), contact.get(key))
-                    print
-
-# iterkeys() — возвращает итератор ключей:
-
-                    d.iterkeys()
-
-# copy()
-Пример создания копии словаря:
-
-        x = {"user":'admin','attr':[1,2,3]}
-        y = x.copy()
-
-Метод copy() не делает полного копирования: если мы, например, сделаем операцию:
-        x['attr'].remove(1)
-то обнаружим, что удаление атрибута произойдет также и в копии.
-Чтобы этого не произошло, нужно использовать метод deepcopy().
-        from copy import deepcopy
-        y = x.deepcopy()
-
-# fromkeys() — создает словарь по заданным ключам с пустыми значениями:
-    {}.fromkeys(['name', 'age'])
-
-# Можно все значения заполнить по умолчанию:
-    {}.fromkeys(['name', 'age'],123)
-
-    marks = {}.fromkeys(['Math','English','Science'], 0)
-
-    # Output: {'English': 0, 'Math': 0, 'Science': 0}
-    print(marks)
-
-    for item in marks.items():
-        print(item)
-
-    # Output: ['English', 'Math', 'Science']
-    list(sorted(marks.keys()))
-
-# has_key() — проверяет, есть ли в словаре значение по данному ключу:
-    d = {}
-    d.has_key('name')
-
-# items() — возвращает список значений:
-
-    for key, value in d.items():
-            print(key, value)
-
-# iteriyems() — возвращает итератор — выдает тот же результат:
-
-    for k, v in d.iteritems():
-    ...     print k, v
-
-
-# pop() — извлекает значение по ключу с последующим удалением:
-    d.pop('title')
-
-# popitem() — извлекает произвольное значение с последующим удалением:
-    d = {'title': 'Python Web Site', 'url': 'http://www.python.org', 'www': 'python'}
-    d.popitem()
-
-# values() — возвращает список значений:
-
-    d={}
-    d[1]=1
-    d[2]=2
-    d[3]=3
-    d
-
-    d.values()
-
-# del — оператор удаляет пару ключ: значение по ключу:
-    del d[2]
-
-
-# Python Dictionary Comprehension
-
-Dictionary comprehension is an elegant and concise way to create new dictionary from an iterable in Python.
-
-Dictionary comprehension consists of an expression pair (key: value) followed by for statement inside curly braces {}.
-
-Here is an example to make a dictionary with each item being a pair of a number and its square.
-
-    squares = {x: x*x for x in range(6)}
-
-    # Output: {0: 0, 1: 1, 2: 4, 3: 9, 4: 16, 5: 25}
-    print(squares)
-
-This code is equivalent to
-
-        squares = {}
-        for x in range(6):
-           squares[x] = x*x
-
-A dictionary comprehension can optionally contain more for or if statements.
-
-An optional if statement can filter out items to form the new dictionary.
-
-Here are some examples to make dictionary with only odd items.
-
-    odd_squares = {x: x*x for x in range(11) if x%2 == 1}
-
-    # Output: {1: 1, 3: 9, 5: 25, 7: 49, 9: 81}
-    print(odd_squares)
-
-## phoneGup9.py
-
-        def add_contact(rec):
-            #  zip(*iterables) Make an iterator
-            # that aggregates elements from each of the iterables.
-            d = {x: y for (x, y) in zip(lookup, rec)}
-            contacts.append(d)
-
-
-        def makeList(prompt):
-            raw = raw_input(prompt + ":> ")
-            return newRecord.append(raw)
+# python-21v unit 05
+# Files
+## Opening and Closing Files
+    file object = open(file_name [, access_mode][, buffering])
+
+##  Детали параметров файла:
+- file_name: имя файла.
+- access_mode: режим доступа к файлу
+- buffering: буферизация Если 0 - отключает буферизацию, данные сразу записываются. Если 1 - Построчный режим буферизации. Если больше одного процесс буферизации выполняется с указанным размером буфера. Отрицательное число - размер буфера будет равен системному.
+
+## Режимы работы с файлами
+- r  - Открывает файл только для чтения. Указатель стоит в начале файла.
+- rb - Открывает файл для чтения в двоичном формате. Указатель стоит в начале файла.
+- r+ - Открывает файл для чтения и записи. Указатель стоит в начале файла.
+- rb+ - Открывает файл для чтения и записи в двоичном формате. Указатель стоит в начале файла.
+- w - Открывает файл только для записи. Указатель стоит в начале файла. Создает файл с именем имя_файла, если такового не существует.
+- wb - Открывает файл для записи в двоичном формате. Указатель стоит в начале файла. Создает файл с именем имя_файла, если такового не существует.
+- w+ - Открывает файл для чтения и записи. Указатель стоит в начале файла. Создает файл с именем имя_файла, если такового не существует.
+- wb+ - Открывает файл для чтения и записи в двоичном формате. Указатель стоит в начале файла. Создает файл с именем имя_файла, если такового не существует.
+- a - Открывает файл для добавления информации в файл. Указатель стоит в конце файла. Создает файл с именем имя_файла, если такового не существует.
+- ab - Открывает файл для добавления в двоичном формате. Указатель стоит в конце файла. Создает файл с именем имя_файла, если такового не существует.
+- a+ - Открывает файл для добавления и чтения. Указатель стоит в конце файла. Создает файл с именем имя_файла, если такового не существует.
+- ab+ - Открывает файл для добавления и чтения в двоичном формате. Указатель стоит в конце файла. Создает файл с именем имя_файла, если такового не существует.
+
+        f1 = open("test") # по умолчанию файл открывается в режиме r(чтение)
+        f2 = open("test", "w") # файл открывается для записи
+        f2 = open("test", "w", 0) # отключает буферизацию, данные сразу записываются в файл (например при вызове метода write())
+        f3 = open("test", "a") # файл открывается для записи в конец
+        f4 = open("test", "a+") # файл открывается как для чтения так и для записи в конец
+        f5 = open("test", "ab") # добавляя к режиму символ "b" мы можем работать с файлам как с двоичными данными(интерпритация символа новой строки отключена)
+        xfile = open("test.txt")
+
+# Атрибуты
+## file.closed
+Возвращает True если файл был закрыт.
+## file.mode
+Возвращает режим доступа, с которым был открыт файл.
+## file.name
+Возвращает имя файла.
+## file.softspace
+Возвращает False если при выводе содержимого файла следует отдельно добавлять пробел.
+
+# Открытие файла
+        fo = open("foo.txt", "wb")
+        print "Name of the file: ", fo.name
+        print "Closed or not : ", fo.closed
+        print "Opening mode : ", fo.mode
+        print "Softspace flag : ", fo.softspace
+
+# Закрытие файла в Python. Метод close().
+Метод файлового объекта close() автоматически закрывает файл, при этом теряется любая несохраненная информация. Работать с файлом (читать, записывать) после этого нельзя.
+Python автоматически закрывает файл если файловый объект к которому он привязан присваивается другому файлу. Однако, хорошей практикой будет вручную закрывать файл командой close().
+        my_file = open("some.txt")
+        print("Имя файла: ", my_file.name)
+        print("Файл закрыт: ", my_file.closed)
+        my_file.close()
+        print("А теперь закрыт: ", my_file.closed)
+
+# Чтение и запись файлов в Python
+Для файлового объекта доступен целый набор методов, чтобы облегчить нашу работу с файлом.
+## Запись в файл в Python. Метод write().
+Метод write() записывает любую строку в открытый файл. Важно помнить, что строки в Python могут содержать двоичные данные, а не только текст.
+Метод write() не добавляет символ переноса строки ('\n') в конец файла.
+### Синтаксис метода write().
+    my_file.write(string);
+
+        my_file = open("some.txt", "w")
+        my_file.write("Мне нравится Python!\nЭто классный язык!")
+        my_file.close()
+
+## Чтение из файла в Python. Метод read().
+Метод read() читает строку из открытого файла.
+### Синтаксис метода read().
+    my_file.read([count])
+Необязательный параметр count - это количество байт, которые следует прочитать из открытого файла. Этот метод читает информацию с начала файла и, если параметр count не указан, до конца файла.
+
+Например, прочтем созданный нами файл some.txt:
+        my_file = open("some.txt")
+        my_string = my_file.read()
+        print("Было прочитано:")
+        print(my_string)
+        my_file.close()
+### прочитать весь файл в строку
+        xString = xfile.read()
+### прочитать N-байтов в строку
+        xString = xfile.read(N)
+
+        fileHandler = open("contacts.db")
+        my_string = fileHandler.read()
+        print("Было прочитано:")
+        print(my_string)
+        fileHandler.close()
+
+        Было прочитано:
+        Alice:Foo:23411122:23 Foo drive
+        Beth:Bar:23422255:44 Bar street
+
+### прочитать текстовую строку включая символ конца строки
+        xString = xfile.readline()
+
+        fileHandler = open("contacts.db")
+        # прочитать текстовую строку включая символ конца строки
+        xString = fileHandler.readline()
+        print("Было прочитано:")
+        print(xString)
+        fileHandler.close()
+
+        Было прочитано:
+        Alice:Foo:23411122:23 Foo drive
+
+### прочитать весь файл целиком в список строк
+        xList = xfile.readlines()
+
+        fileHandler = open("contacts.db")
+        # прочитать весь файл целиком в список строк
+        xList = fileHandler.readlines()
+        print("Было прочитано:")
+        print(xList)
+        fileHandler.close()
+
+        Было прочитано:
+        ['Alice:Foo:23411122:23 Foo drive\n', 'Beth:Bar:23422255:44 Bar street\n']
+
+## [Reading and Writing Files](https://docs.python.org/3/tutorial/inputoutput.html#reading-and-writing-files)
+        print("Было прочитано:")
+        with open("contacts.db") as f:
+            lines = f.readlines()
+        print(lines)
+
+        Было прочитано:
+        ['Alice:Foo:23411122:23 Foo drive\n', 'Beth:Bar:23422255:44 Bar street\n']
+
+        or with stripping the newline character:
+
+        print("Было прочитано:")
+        lines = [line.rstrip('\n') for line in open("contacts.db")]
+        print(lines)
+
+        line.strip() would remove all leading and trailing whitespace, not just the trailing \n.
+
+        Было прочитано:
+        ['Alice:Foo:23411122:23 Foo drive', 'Beth:Bar:23422255:44 Bar street']
+
+### phoneGup11.py
+
+    contacts = []
+
+        if choice == 'p':
+            lines = [line.rstrip('\n') for line in open("contacts.db")]
+            for line in lines:
+                newRecord = line.split(':')
+                add_contact(newRecord)
+            print_contacts(contacts)
+
+### записать строку в файл
+        xfile.write(xString)
+
+        def save_contact():
+            pass
+### закрытие файла в ручную (выполняется по окончанию работы с файлом)
+        xfile.close()
+
+### phoneGup12.py
+    def save_contact(rec):
+        fileHandler = open("contacts.db", 'a')
+        fileHandler.write(':'.join(rec))
+        fileHandler.close()
 
         elif choice == 'a':
             newRecord = []
@@ -311,212 +173,99 @@ Here are some examples to make dictionary with only odd items.
             for prompt in tup1:
                 makeList(prompt)
             add_contact(newRecord)
+            save_contact(newRecord)
 
-# Dictionary Membership Test
-
-We can test if a key is in a dictionary or not using the keyword in. Notice that membership test is for keys only, not for values.
-
-        squares = {1: 1, 3: 9, 5: 25, 7: 49, 9: 81}
-
-        # Output: True
-        print(1 in squares)
-
-        # Output: True
-        print(2 not in squares)
-
-        # membership tests for key only not value
-        # Output: False
-        print(49 in squares)
-
-# Iterating Through a Dictionary
-
-Using a for loop we can iterate though each key in a dictionary.
-
-    squares = {1: 1, 3: 9, 5: 25, 7: 49, 9: 81}
-    for i in squares:
-        print(squares[i])
-
-# Built-in Functions with Dictionary
-
- Built-in functions like all(), any(), len(), cmp(), sorted() etc. are commonly used with dictionary to perform different tasks.
-
-   all() 	Return True if all keys of the dictionary are true (or if the dictionary is empty).
-   any() 	Return True if any key of the dictionary is true. If the dictionary is empty, return False.
-   len() 	Return the length (the number of items) in the dictionary.
-   cmp() 	Compares items of two dictionaries.
-   sorted() 	Return a new sorted list of keys in the dictionary.
-
-Here are some examples that uses built-in functions to work with dictionary.
-
-   squares = {1: 1, 3: 9, 5: 25, 7: 49, 9: 81}
-
-    # Output: 5
-    print(len(squares))
-
-    # Output: [1, 3, 5, 7, 9]
-    print(sorted(squares))
+### phoneGup13.py
+    def save_contact(rec):
+        fileHandler = open("contacts.db", 'a')
+        fileHandler.write(':'.join(rec)+'\n')
+        fileHandler.close()
 
 
-            # -*- coding:utf-8 -*-
-            # ---------- PhoneGup ----------
-            '''
-             Program make a simple phonegup that can add,
-             view, modify, delete and save the records
-            '''
-            titles = (
-                'Select operation:',
-                "Usage operation:"
-                )
+    def load_contacts():
+        lines = [line.rstrip('\n') for line in open("contacts.db")]
+        for line in lines:
+            newRecord = line.split(':')
+            add_contact(newRecord)
 
-            choices = (
-                "Help",
-                'Print Phone Numbers',
-                'Add a Phone Number',
-                'Remove a Phone Number',
-                'Lookup a Phone Number',
-                'Save Phone Numbers',
-                "Quit"
-                )
-
-            helpers = (
-                'Display this usage message',
-                'Print Phone Numbers',
-                'Add a Phone Number',
-                'Remove a Phone Number',
-                'Lookup a Phone Number',
-                'Save Phone Numbers',
-                'Exit programm'
-                )
-
-            contacts = [
-                {
-                    'firstName': 'Alice',
-                    'lastName': 'Foo',
-                    'phone': '23411122',
-                    'address': '23 Foo drive',
-                 },
-                {
-                    'firstName': 'Beth',
-                    'lastName': 'Bar',
-                    'phone': '23422255',
-                    'address': '44 Bar street',
-                },
-            ]
-            lookup = (
-                'firstName',
-                'lastName',
-                'phone',
-                'address'
-            )
+        if choice == 'p':
+            if len(contacts) == 0:
+                load_contacts()
+            print_contacts(contacts)
 
 
-            def printMenu(w, j, obj):
-                gup = (': ', '| ')
+        xfile.writelines(xList) # записать строки из списка в файл
 
-                print("_"*(w+7))
-                print(gup[1] + titles[j].ljust(w+3, ' ') + gup[1][::-1])
+        xfile.flush() # выталкивает выходные буферы на диск, файл остается открытым
 
-                for item in obj:
-                    print(
-                        gup[1] + item[0].lower() + gup[0] +
-                        item.ljust(w, ' ') + gup[1][:: -1]
-                        )
-
-                print("="*(w+7))
+        xfile.seek(N) # изменяет текущую позицию в файле для следующей операции, смещая ее на N-байтов от начала файла
 
 
-            def menu():
-                tupleLen = [len(i) for i in choices]
-                width = max(max(tupleLen), len(titles[0]))
+## Как узнать позицию указателя в файле в Python.
+После того как вы вызвали метод read() на файловом объекте, если вы повторно вызовете read(), то увидите лишь пустую строку. Это происходит потому, что после первого прочтения указатель находится вконце файла. Для того чтобы узнать позицию указателя можно использовать метод tell().
+        my_file = open("some.txt")
+        my_file.read(10)
+        print ("Я на позиции:", my_file.tell())
+        my_file.close()
+метод tell() сообщает в скольки байтах от начала файла мы сейчас находимся.
+Чтобы перейти на нужную нам позицию, следует использовать другой метод - seek().
+### Синтаксис метода seek().
+    my_file.seek(offset, [from])
+Аргумент offset указывет на сколько байт перейти.  опциональный аргумент from означает позицию, с которой начинается движение. 0 - означает начало файла, 1 нынешняя позиция, 2 - конец файла.
+    my_file = open("some.txt", "r")
+    print(my_file.read(10))
+    print("Мы находимся на позиции: ", my_file.tell())
+### Возвращаемся в начало
+    my_file.seek(0)
+    print(my_file.read(10))
+    my_file.close()
+## Добавление в файл. Метод write()
+Если вы хотите не перезаписать файл полностью (что делает метод write в случае открытия файла в режиме 'w'), а только добаить какой-либо текст, то файл следует открывать в режиме 'a' - appending. После чего использовать все тот же метод write.
+### Удалит существующую информацию в some.txt и запишет "Hello".
+    my_file = open("some.txt", 'w')
+    my_file.write("Hello")
+    my_file.close()
+### Оставит существующую информацию в some.txt и добавит "Hello".
+    my_file = open("some.txt", 'a')
+    my_file.write("Hello")
+    my_file.close()
+## Расширенная работа с файлами в Python.
+Для доступа к более широкому функционалу в работе с файлами в Python, как то удаление файлов, создание директорий и т.д. Следует подключить библиотеку os.
+    import os
+## Переименовать или удалить файл
+    os.rename(current_file_name, new_file_name)
+## Rename a file from test1.txt to test2.txt
+    os.rename( "test1.txt", "test2.txt" )
+## Delete file test2.txt
+    os.remove("text2.txt")
+## Create a directory "test"
+    os.mkdir("newdir")
+    os.mkdir("test")
+    os.chdir("newdir")
+## Changing a directory to "/home/newdir"
+    os.chdir("/home/newdir")
+    os.getcwd()
+    import os
+    os.getcwd()
+    os.rmdir('dirname')
+## This would  remove "/tmp/test"  directory.
+    os.rmdir( "/tmp/test"  )
+## Пример скрипта который сам создает файлы Python c баш-строкой.
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
 
-                print 'phonegup'.upper().center(width+7, '=')
-                printMenu(width, 0, choices)
+    myfile = open("newfile.py", "w")
+    myfile.write("#!/usr/bin/env python\n# -*- coding: utf-8 -*-")
+    myfile.close()
+## Скачать и сохранить файл, используя Python
+    #!/usr/bin/env python
+    # -*- coding: utf-8 -*-
+    import urllib
 
-                choiceList = [item[0].lower() for item in choices]
-                choiceList = ' | '.join(choiceList)
+    url = "http://www.google.ru/index.html"
 
-                choice = raw_input("Enter choice "+choiceList+':>')
-                return str(choice) if choice != '' else 'h'
-
-
-            def myhelp():
-                list1 = list()
-                for i in range(len(helpers)):
-                    list1.append(choices[i]+' - ' + helpers[i])
-
-                listLen = [len(i) for i in list1]
-                printMenu(max(listLen), 1, list1)
-
-
-            def print_contacts(contacts):
-                print("All Contacts in PhoneGup:")
-                for item in contacts:
-                    print(
-                        "Name:", item['firstName'],
-                        "\tNumber:", item['phone']
-                        )
-                print
-
-
-            def add_contact(rec):
-                #  zip(*iterables) Make an iterator
-                # that aggregates elements from each of the iterables.
-                d = {x: y for (x, y) in zip(lookup, rec)}
-                contacts.append(d)
-
-
-            def look_contact():
-                fieldList = [item[0] for item in lookup]
-                look = raw_input("Enter Field "+' | '.join(fieldList)+':>')
-                return str(look) if (look != '' and look in fieldList) else 'h'
-
-
-            def print_contact(look):
-                for lookKey in lookup:
-                    if lookKey.startswith(look):
-                        serchKey = lookKey
-                key = 'phone'
-                search = raw_input("Enter Search String " + ':>')
-                for contact in contacts:
-                    if search.upper() in contact.get(serchKey).upper():
-                        print("Contact in PhoneGup:")
-                        print "%s %s phone is %s" % (contact.get('firstName'), contact.get('lastName'), contact.get(key))
-                        print
-
-
-            def makeList(prompt):
-                raw = raw_input(prompt + ":> ")
-                return newRecord.append(raw)
-
-
-            def save_contacts():
-                pass
-
-            while True:
-                choice = menu()
-
-                if choice == 'q':
-                    print('{!s:#^40}'.format('Thankyou for using phoneGup.py!'))
-                    break
-                if choice == 'h':
-                    myhelp()
-                    continue
-                if choice == 'p':
-                    print_contacts(contacts)
-                elif choice == 'a':
-                    newRecord = []
-                    tup1 = ("First Name", "Last Name", "Phone Number", "Address")
-                    print("Add New Record To PhoneGap")
-                    for prompt in tup1:
-                        makeList(prompt)
-                    add_contact(newRecord)
-                if choice == 'l':
-                    look = look_contact()
-                    if look == 'h':
-                        print 'Use f for First Name or l for LAst Name'
-                    else:
-                        print_contact(look)
-                if choice == 's':
-                    save_contacts()
-                else:
-                    continue
+    webFile = urllib.urlopen(url)
+    localFile = open(url.split('/')[-1], 'wb')
+    localFile.write(webFile.read())
+    webFile.close()
+    localFile.close()
