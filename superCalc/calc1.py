@@ -4,64 +4,55 @@
  Program make a simple calculator that can add,
  subtract, multiply and divide using functions
 '''
-from functions import add
-from menu import menu, printMenu, myhelp, extacts
-ops = ('+', '-', '*', '/', '//', '%', '**')
+# импортирование модулей python
+try:
+    # for Python2
+    from Tkinter import *   # notice capitalized T in Tkinter
+    import tkFont
+    import tkMessageBox
+except ImportError:
+    # for Python3
+    from tkinter import *   # notice lowercase 't' in tkinter here
+    from tkinter import font
+    from tkinter import messagebox
 
-while True:
 
-    choice = menu()
+class Application(Frame):
+    def helloCallBack(self):
+        tkMessageBox.showinfo("Hello Python", "Simple Calculator")
 
-    if choice == 'q':
-        print('{!s:#^40}'.format('Thankyou for using calculator.py!'))
-        break
-    if choice == 'h':
-        myhelp()
-        continue
-    if choice == 'c':
-        entry = raw_input("Enter x operator y: ")
+    def cmd(self):
+        pass
 
-        for o in ops:
-            if entry.count(o) == 1:
-                a, b, operator = extacts(entry, o)
-            if entry.count(o) == 2:
-                a, b, operator = extacts(entry, 2*o)
+    def __init__(self, master=None):
+        Frame.__init__(self, master)
+        btn_list = [
+          '7',  '8',  '9',  '*',  'C',
+          '4',  '5',  '6',  '/',  'M->',
+          '1',  '2',  '3',  '-',  '->M',
+          '0',  '.',  '=',  '+',  'neg'
+          ]
+        # create all buttons with a loop
+        r = 1
+        c = 0
+        for b in btn_list:
+            rel = RIDGE
+            Button(master, text=b, width=5, relief=rel, command=self.cmd).grid(row=r, column=c)
+            c += 1
+            if c > 4:
+                c = 0
+                r += 1
 
-        if a.isdigit():
-            x = float(a)
-        else:
-            myhelp()
-            continue
 
-        if b.isdigit():
-            y = float(b)
-        else:
-            myhelp()
-            continue
+def main():
+    # Создать приложение
+    app = Application()
+    # Вызов методов класса менеджера окон (Wm)
+    app.master.title("Super Calculator")
+    app.master.maxsize(1000, 400)
+    # Запуск программы
+    app.mainloop()
 
-        if operator not in ops:
-            myhelp()
-            continue
 
-        if operator == "+":
-            print("{} + {} = {}".format(x, y, add(x, y)))
-
-        elif operator == "-":
-            print("{:+08.2f} - {:+08.2f} = {:+08.2f}"
-                  .format(x, y, subtract(x,  y)))
-
-        elif operator == "*":
-            print("{0} * {k} = {1}".format(x, multiply(x, y), k=y))
-
-        elif (operator == "/" or operator == "//" or operator == "%")  and y == 0:
-            print 'integer division or modulo by zero'
-
-        elif operator == "/" and y != 0:
-            print("{0:+08.2f} / {1:+08.2f} = {2:+08.2f}"
-                  .format(x, y, divide(x, y)))
-
-        elif operator == "//" and y != 0:
-            print("{} // {} = {}".format(x, y, intdivide(x, y)))
-
-        elif operator == "%" and y != 0:
-            print("{} % {} = {}".format(x, y, modulo(x, y)))
+if __name__ == '__main__':
+    main()
