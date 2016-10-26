@@ -48,7 +48,7 @@ lambda-выражения сродни тому, что вы помещаете 
      act = knights()
      act(‘robin’)
 
-Когда можно использовать lambda-выражения:
+## Когда можно использовать lambda-выражения:
 - Для создания таблиц переходов, которые представляют собой списки или словари действий, выполняемых по требованию.
 Например:
     L = [lambda x: x**2,   # Встроенные определения функций
@@ -74,71 +74,68 @@ lambda-выражения сродни тому, что вы помещаете 
 
 Подобные таблицы действий в языке Python можно создавать с помощью словарей и других структур данных.
 Пример, выполненный в интерактивном сеансе:
- key = ‘got’
- {‘already’: (lambda: 2 + 2),
-...  ‘got’:     (lambda: 2 * 4),
-...  ‘one’:     (lambda: 2 ** 6)}[key]()
+     key = ‘got’
+     {‘already’: (lambda: 2 + 2),
+    ...  ‘got’:     (lambda: 2 * 4),
+    ...  ‘one’:     (lambda: 2 ** 6)}[key]()
 
 
 Тот же пример без использования lambda:
- def f1(): return 2 + 2
-...
- def f2(): return 2 * 4
-...
- def f3(): return 2 ** 6
-...
- key = ‘one’
- {‘already’: f1, ‘got’: f2, ‘one’: f3}[key]()
-64
-
+     def f1(): return 2 + 2
+    ...
+     def f2(): return 2 * 4
+    ...
+     def f3(): return 2 ** 6
+    ...
+     key = ‘one’
+     {‘already’: f1, ‘got’: f2, ‘one’: f3}[key]()
+    64
 
 Так же возможна реализация логики выбора внутри lambda-функций:
- lower = (lambda x, y: x if x < y else y)
- lower(‘bb’, ‘aa’)
-‘aa’
- lower(‘aa’, ‘bb’)
-‘aa’
-
+     lower = (lambda x, y: x if x < y else y)
+     lower(‘bb’, ‘aa’)
+    ‘aa’
+     lower(‘aa’, ‘bb’)
+    ‘aa’
 
 Если необходимо выполнить цикл внутри lambda, то можно использовать map и генераторы списков:
-Пример №1
- import sys
- showall = lambda x: list(map(sys.stdout.write, x))
-                                   # Функция list
-                                   # необходима в 3.0
- t = showall([‘spam\n’, ‘toast\n’, ‘eggs\n’])
-spam
-toast
-eggs
+### Пример №1
+     import sys
+     showall = lambda x: list(map(sys.stdout.write, x))
+                                       # Функция list
+                                       # необходима в 3.0
+     t = showall([‘spam\n’, ‘toast\n’, ‘eggs\n’])
+    spam
+    toast
+    eggs
 
-Пример №2
- showall = lambda x: [sys.stdout.write(line) for line in x]
- t = showall((‘bright\n’, ‘side\n’, ‘of\n’, ‘life\n’))
-bright
-side
-of
-life
+### Пример №2
+     showall = lambda x: [sys.stdout.write(line) for line in x]
+     t = showall((‘bright\n’, ‘side\n’, ‘of\n’, ‘life\n’))
+    bright
+    side
+    of
+    life
 
-
-Вложенные lambda-выражения и области видимости:
-Соблюдается правило LEGB.
+### Вложенные lambda-выражения и области видимости:
+Соблюдается правило LEGB (Local, Enclosing, Global, Built-in).
 Например, lambda-выражение находится внутри  инструкции  def – типичный  случай – и  потому  получает значение имени x из области видимости объемлющей функции, имевшееся на момент ее вызова:
- def action(x):
-...     return (lambda y: x + y) # Создать и вернуть ф-цию,
-...                              # запомнить x
- act = action(99)
- act
-<function <lambda> at 0x00A16A88>
- act(2)         # Вызвать функцию, созданную ф-цией action
-101
+     def action(x):
+    ...     return (lambda y: x + y) # Создать и вернуть ф-цию,
+    ...                              # запомнить x
+     act = action(99)
+     act
+    <function <lambda> at 0x00A16A88>
+     act(2)         # Вызвать функцию, созданную ф-цией action
+    101
 
 Предыдущая инструкция def в виде lambda-выражения:
- action = (lambda x: (lambda y: x + y))
- act = action(99)
- act(3)
-102
- ((lambda x: (lambda y: x + y))(99))(4)
-103
+     action = (lambda x: (lambda y: x + y))
+     act = action(99)
+     act(3)
+    102
+     ((lambda x: (lambda y: x + y))(99))(4)
+    103
 Эта  структура  lambda-выражений  создает функцию,  которая при  вызове создает  другую функцию. В обоих случаях вложенное  lambda-выражение имеет доступ к переменной x в объемлющем lambda-выражении.
 
 # обратные вызовы (callbacks)
@@ -299,7 +296,7 @@ END это специальный индекс, который означает 
                   '1',  '2',  '3',  '-',  'x²', 'MR',
                   '0',  '.',  '=',  '+',  '-x', 'MC'
                   ]
-                # create all buttons with a loop
+                # create all buttons with a loop (*)
                 r = 1
                 c = 0
                 for b in btn_list:
@@ -328,3 +325,228 @@ END это специальный индекс, который означает 
 
         if __name__ == '__main__':
             main()
+
+# eval
+Разбирает и исполняет указанное выражение.
+            eval(expression, globals=None, locals=None)
+Параметры
+- expression : Выражение, которое требуется исполнить, в виде строки. Либо объект кода.
+- globals=None : Ожидается dict. Словарь глобального пространства, относительно которого следует исполнить выражение. Если указан, но не содержит атрибута __builtins__ данные указанного пространства будут дополнены данными общего глобального пространства, перед разбором выражения. Таким образом, выражение будет иметь доступ ко всем встроенным модулям.
+- locals=None : Ожидается объект-отображение (например, dict). Локальное пространство, в котором следует исполнить выражение. Если не указано, то используется словарь глобального пространства.
+
+Результат выполненного выражения
+Если оба аргумента опущены, то выражение будет выполнено в среде, где был осуществлён вызов функции.
+В случае ошибок возбуждает SyntaxError
+                x = 1
+                eval('x+1')  # 2
+Данная функция также может быть использована для выполнения произвольных объектов кода, например тех, что возвращает compile().
+Если объект кода собран в режиме exec будет возвращено None.
+Динамическое исполнение инструкций поддерживается инструкцией (а начиная с 3.0  функцией) exec().
+Функциям eval() и exec() можно передавать результаты функций globals() и locals().
+
+# calc5.py
+        class Application(Frame):
+            def click(self, key):
+                if key == '=':
+                    # guard against the bad guys abusing eval()
+                    str1 = "-+0123456789."
+                    if self.entry.get()[0] not in str1:
+                        self.entry.insert(END, "first char not in " + str1)
+                    # here comes the calculation part
+                    try:
+                        result = eval(self.entry.get())
+                        self.entry.insert(END, " = " + str(result))
+                    except:
+                        self.entry.insert(END, "--> Error!")
+                elif key == 'C':
+                    # clear entry
+                    self.txt = self.entry.get()[:-1]
+                    self.entry.delete(0, END)
+                    self.entry.insert(0, self.txt[:-1])
+                elif key == 'AC':
+                    self.entry.delete(0, END)  # clear all entry
+                else:
+                    # previous calculation has been done, clear entry
+                    if '=' in self.entry.get():
+                        self.entry.delete(0, END)
+                    self.entry.insert(END, key)
+
+            def __init__(self, master=None):
+                Frame.__init__(self, master)
+                btn_list = [
+                  '7',  '8',  '9',  '*', '%',  'M',
+                  '4',  '5',  '6',  '÷', '√ ', 'MS',
+                  '1',  '2',  '3',  '-',  'x²', 'MR',
+                  '0',  '.',  '=',  '+',  '-x', 'MC'
+                  ]
+                # create all buttons with a loop (*)
+                r = 1
+                c = 0
+                for b in btn_list:
+                    rel = RIDGE
+                    cmd = lambda x=b: self.click(x)
+                    Button(master, text=b, width=5, relief=rel, command=cmd).grid(row=r, column=c)
+                    c += 1
+                    if c > 5:
+                        c = 0
+                        r += 1
+
+                # use Entry widget for an editable display
+                self.entry = Entry(master, width=33, bg="yellow")
+                self.entry.grid(row=0, column=0, columnspan=5)
+                Button(master, text='C', width=3, command=lambda x='C': self.click(x)).grid(row=0, column=4)
+                Button(master, text='AC', width=3, command=lambda x='AC': self.click(x)).grid(row=0, column=5)
+
+## Метод replace
+Метод replace заменяет все вхождения одной строки на другую. Формат: S.replace(old, new) — заменить в строке S все вхождения подстроки old на подстроку new. Пример:
+
+                >>> 'Hello'.replace('l', 'L')
+                'HeLLo'
+
+Если методу replace задать еще один параметр: S.replace(old, new, count), то заменены будут не все вхождения, а только не больше, чем первые count из них.
+
+                >>> 'Abrakadabra'.replace('a', 'A', 2)
+                'AbrAkAdabra'
+
+## calc6.py
+        class Application(Frame):
+            def click(self, key):
+                if key == '=':
+                    # avoid division by integer
+                    if '/' in self.entry.get() and '.' not in self.entry.get():
+                        self.entry.insert(END, ".0")
+                    # guard against the bad guys abusing eval()
+                    str1 = "-+0123456789."
+                    if self.entry.get()[0] not in str1:
+                        self.entry.insert(END, "first char not in " + str1)
+                    # here comes the calculation part
+                    try:
+                        result = eval(self.entry.get())
+                        self.entry.insert(END, " = " + str(result))
+                    except:
+                        self.entry.insert(END, "--> Error!")
+                elif key == 'C':
+                    # clear entry
+                    self.txt = self.entry.get()[:-1]
+                    self.entry.delete(0, END)
+                    self.entry.insert(0, self.txt[:-1])
+
+                elif key == 'AC':
+                    self.entry.delete(0, END)  # clear all entry
+                else:
+                    # previous calculation has been done, clear entry
+                    if '=' in self.entry.get():
+                        self.entry.delete(0, END)
+                    if '÷'.decode('utf-8') in self.entry.get():
+                        div = self.entry.get().replace('÷'.decode('utf-8'), '/')
+                        self.entry.delete(0, END)
+                        self.entry.insert(END, div)
+                    self.entry.insert(END, key)
+
+## calc7.py
+        elif key == '-x':
+            if '=' in self.entry.get():
+                self.entry.delete(0, END)
+            try:
+                if self.entry.get()[0] == '-':
+                    self.entry.delete(0)
+                else:
+
+                    self.entry.insert(0, '-')
+            except IndexError:
+                pass
+
+## calc8.py
+        class Application(Frame):
+            def click(self, key):
+                if key == '=':
+                    # avoid division by integer
+                    if '/' in self.entry.get() and '.' not in self.entry.get():
+                        self.entry.insert(END, ".0")
+                    # guard against the bad guys abusing eval()
+                    str1 = "-+0123456789."
+                    if self.entry.get()[0] not in str1:
+                        self.entry.insert(END, "first char not in " + str1)
+                    # here comes the calculation part
+                    try:
+                        result = eval(self.entry.get())
+                        self.entry.insert(END, " = " + str(result))
+                    except:
+                        self.entry.insert(END, "--> Error!")
+                elif key == 'C':
+                    # clear entry
+                    self.txt = self.entry.get()[:-1]
+                    self.entry.delete(0, END)
+                    self.entry.insert(0, self.txt[:-1])
+
+                elif key == 'AC':
+                    self.mem.configure(bg="#CCCCCC")
+                    self.entry.delete(0, END)  # clear all entry
+                elif key == 'MS':
+                    self.memory = self.entry.get()
+                    # extract the result
+                    if '=' in self.memory:
+                        ix = self.memory.find('=')
+                        self.memory = self.memory[ix+2:]
+                    self.mem.configure(bg="#FF0000")
+                elif key == 'MC':
+                    self.memory = None
+                    self.mem.configure(bg="#CCCCCC")
+                elif key == 'MR':
+                    if self.memory:
+                        self.entry.insert(END, self.memory)
+                elif key == '-x':
+                    if '=' in self.entry.get():
+                        self.entry.delete(0, END)
+                    try:
+                        if self.entry.get()[0] == '-':
+                            self.entry.delete(0)
+                        else:
+                            self.entry.insert(0, '-')
+                    except IndexError:
+                        pass
+                else:
+                    # previous calculation has been done, clear entry
+                    if '=' in self.entry.get():
+                        self.entry.delete(0, END)
+                    if '÷'.decode('utf-8') in self.entry.get():
+                        div = self.entry.get().replace('÷'.decode('utf-8'), '/')
+                        self.entry.delete(0, END)
+                        self.entry.insert(END, div)
+                    self.entry.insert(END, key)
+
+            def __init__(self, master=None):
+                Frame.__init__(self, master)
+                self.memory = None
+                btn_list = [
+                  '7',  '8',  '9',  '*', '%',  '',
+                  '4',  '5',  '6',  '÷', '√ ', 'MS',
+                  '1',  '2',  '3',  '-',  'x²', 'MR',
+                  '0',  '.',  '=',  '+',  '-x', 'MC'
+                  ]
+                # create all buttons with a loop (*)
+                r = 1
+                c = 0
+                for b in btn_list:
+                    rel = RIDGE
+                    if b == '':
+                        c += 1
+                        if c > 5:
+                            c = 0
+                            r += 1
+                        continue
+                    cmd = lambda x=b: self.click(x)
+                    Button(master, text=b, width=5, relief=rel, command=cmd).grid(row=r, column=c)
+                    c += 1
+                    if c > 5:
+                        c = 0
+                        r += 1
+                self.mem = Button(master, text='M', width=5, relief=RIDGE)
+                self.mem.grid(row=1, column=5)
+
+                # use Entry widget for an editable display
+                self.entry = Entry(master, width=33, bg="yellow")
+                self.entry.grid(row=0, column=0, columnspan=5)
+
+                Button(master, text='C', width=3, command=lambda x='C': self.click(x)).grid(row=0, column=4)
+                Button(master, text='AC', width=3, command=lambda x='AC': self.click(x)).grid(row=0, column=5)
