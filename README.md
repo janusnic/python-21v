@@ -1,546 +1,788 @@
 # python-21v unit 10
-# Python Namespace and Scope
-## Python Namespace and scope of a variable
+# Принципы ООП
+Согласно Алану Кэю — автору языка программирования Smalltalk — объектно-ориентированным может называться язык, построенный с учетом следующих принципов:
 
-If you have ever read 'The Zen of Python' (type "import this" in Python interpreter), the last line states, Namespaces are one honking great idea -- let's do more of those! So what are these mysterious namespaces? Let us first look at what name is.
+1. Все данные представляются объектами
+2. Программа является набором взаимодействующих объектов, посылающих друг другу сообщения
+3. Каждый объект имеет собственную часть памяти и может иметь в составе другие объекты
+4. Каждый объект имеет тип
+5. Объекты одного типа могут принимать одни и те же сообщения (и выполнять одни и те же действия)
 
-Name (also called identifier) is simply a name given to objects. Everything in Python is an object. Name is a way to access the underlying object.
+# Объекты, типы и классы
 
-For example, when we do the assignment a = 2, here 2 is an object stored in memory and a is the name we associate it with. We can get the address (in RAM) of some object through the built-in function, id(). Let's check it.
+Все данные в питоне — это объекты. Каждый объект имеет 2 специальных атрибута __class__ и __dict__.
 
-# Note: You may get different value of id
+Классы — это объекты, и у них тоже есть специальные атрибуты __class__ и __dict__.
 
-a = 2
-# Output: id(2)= 10919424
-print('id(2) =', id(2))
+__class__ — определяет класс или тип, экзмепляром которого является объект. Тип (или класс объекта) определяет его поведение; он есть у всех объектов, в том числе и встроенных. Тип и класс — это разные названия одного и того же. x.__class__ <==> type(x).
 
-# Output: id(a) = 10919424
-print('id(a) =', id(a))
+__dict__ словарь, дающий доступ к внутреннему пространству имен, он есть почти у всех объектов, у многих встроенных типов его нет.
 
-Here, both refer to the same object. Let's make things a little more interesting.
-# Note: You may get different value of id
+## car0
+        class Car(object):
+            cars = 'A'
+
+            def __init__(self, name):
+                self.name = name
+
+            def foo(self):
+                print 'foo car'
+
+        a = Car('Audi')
+        # У a тоже есть __dict__ и __class__:
+        print a.__dict__   # {'name': 'Audi'}
+        print a.__class__  # <class '__main__.Car'>
 
-a = 2
+        print type(a)  # <class '__main__.Car'>
+        print a.__class__ is type(a)  # True
 
-# Output: id(a) = 10919424
-print('id(a) =', id(a))
+## Класс и тип — это одно и то же.
 
-a = a+1
+    a.__class__ is type(a) is Car #True
 
-# Output: id(a) = 10919456
-print('id(a) =', id(a))
+a.__dict__ — это словарь, в котором находятся внутренние (или специфичные для объекта) атрибуты, в данном случае 'name'. А в a.__class__ класс (тип).
 
-# Output: id(3) = 10919456
-print('id(3) =', id(3))
+И, например, в методах класса присваивание self.foo = bar практически идентично self.__dict__['foo'] = bar или сводится к аналогичному вызову.
 
-b = 2
+В __dict__ объекта нет методов класса, дескрипторов, классовых переменных, свойств, статических методов класса, все они определяются динамически с помощью класса из __class__ атрибута, и являются специфичными именно для класса (типа) объекта, а не для самого объекта.
 
-# Output: id(2)= 10919424
-print('id(2) =', id(2))
+### Переопределим класс объекта a:
 
-What is happening in the above sequence of steps? A diagram will help us explain this.
-Initially, an object 2 is created and the name a is associated with it, when we do a = a+1, a new object 3 is created and now a associates with this object.
+        class Bus(object):
+            cars = 'B'
 
-Note that id(a) and id(3) have same values.
+            def __init__(self):
+                self.name = 'B object'
 
-Furthermore, when we do b = 2, the new name b gets associated with the previous object 2.
+            def bar(self):
+                print 'bar Bus'
 
-This is efficient as Python doesn't have to create a new duplicate object. This dynamic nature of name binding makes Python powerful; a name could refer to any type of object.
+        print a.__dict__  # {'name': 'Audi'}
+        print a.foo()  # foo
+        print a.__class__  # <class '__main__.Car'>
+        a.__class__ = B
+        print a.__class__  # <class '__main__.Bus'>
 
->>> a = 5
->>> a = 'Hello World!'
->>> a = [1,2,3]
+        # Смотрим, что поменялось.
+        # Значение a.name осталось прежним,
+        # т.е. __init__ не вызывался при смене класса.
+        print a.__dict__  # {'name': 'Audi'}
+        # Доступ к классовым переменным и методам «прошлого» класса Car пропал:
+        # a.foo() Traceback (most recent call last): File "<stdin>", line 1, in
+        #  <module> AttributeError: 'B' object has no attribute 'foo'
 
-All these are valid and a will refer to three different types of object at different instances. Functions are objects too, so a name can refer to them as well.
-def printHello():
-    print("Hello")     
-a = printHello()
+        # А вот классовые переменные и методы класса Bus доступы:
+        print a.bar()  # bar
+        print a.cars  # 'Bus'
 
-# Output: Hello
-a
-Our same name a can refer to a function and we can call the function through it, pretty neat.
-What is a namespace?
+        # Работа с атрибутам объекта: установка, удаление и поиск, равносильна
+        # вызову встроенных функций settattr, delattr, getattr:
 
-So now that we understand what names are, we can move on to the concept of namespaces.
+        a.x = 1
+        print a.x
+        setattr(a, 'x', 1)
+        print a.x
+        del a.x
+        # print a.x
+        # delattr(a, 'x')
+        # print a.x
+        # print a.x
+        # getattr(a, 'x')
 
-To simply put it, namespace is a collection of names.
+        # При этом стоит стоит понимать, что setattr и delattr
+        # влияют и изменяют только
+        # сам объект (точнее a.__dict__), и не изменяют класс объекта.
+        # cars — является классовой переменной, т.е. она «принадлежит»
+        # классу Bus, а не объекту a:
 
-In Python, you can imagine a namespace as a mapping of every name, you have defined, to corresponding objects.
+        print a.cars   # 'Bus'
+        print a.__dict__  # {'name': 'Audi'}
 
-Different namespaces can co-exist at a given time but are completely isolated.
+Если мы попытаемся удалить этот атрибут, то получим ошибку, т.к. delattr будет пытаться удалить атрибут из a.__dict__
 
-A namespace containing all the built-in names is created when we start the Python interpreter and exists as long we don't exit.
+        delattr(a, 'cars')
+        Traceback (most recent call last):
+        File "<stdin>", line 1, in <module>
+        AttributeError: cars
+        del a.cars
+        Traceback (most recent call last):
+        File "<stdin>", line 1, in <module>
+        AttributeError: qux
+        a.cars
+        'B'
+
+        #  если мы попытаемся изменить (установить) атрибут, setattr поместит его в __dict__, специфичный для данного, конкретного объекта.
+        b = Bus()
+        print b.cars # 'B'
+        a.cars = 'myB'
+        print a.cars # 'myB'
+        print a.__dict__ # {'cars': 'myB', 'name': 'a'}
+        print b.cars # 'B'
+        # Ну и раз есть 'qux' в __dict__ объекта, его можно удалить с помощью delattr:
+        del a.cars
+        # После удаления, a.qux будет возвращать значение классовой переменной:
+        print a.cars # 'B'
+        print a.__dict__ # {'name': 'a'}
 
-This is the reason that built-in functions like id(), print() etc. are always available to us from any part of the program. Each module creates its own global namespace.
+класс для объекта — это значение специального атрибута __class__ и его можно менять.
+почти каждый объект имеет свое пространство имен (атрибутов), доступ (не всегда полный), к которому осуществляется с помощью специального атрибута __dict__
+класс фактичеки влияет только на поиск атрибутов, которых нет в __dict__, как-то: методы класса, дескрипторы, магические методы, классовые переменные и прочее.
 
-These different namespaces are isolated. Hence, the same name that may exist in different modules do not collide.
+## Объекты и классы
 
-Modules can have various functions and classes. A local namespace is created when a function is called, which has all the names defined in it. Similar, is the case with class. Following diagram may help to clarify this concept.
+У класса тип type.
 
-## Python Variable Scope
+    A.__class__
+    <type 'type'>
 
-Although there are various unique namespaces defined, we may not be able to access all of them from every part of the program. The concept of scope comes into play.
+    # Правда __dict__ у классов не совсем словарь
+    print A.__dict__ # <dictproxy object at 0x1111e88>
 
-Scope is the portion of the program from where a namespace can be accessed directly without any prefix.
+    # __dict__ ответственен за доступ к внутреннему пространству имен, в котором хранятся методы, дескрипторы, переменные, свойства и прочее:
 
-At any given moment, there are at least three nested scopes.
+    print dict(A.__dict__) # {'__module__': '__main__', 'qux': 'A', '__dict__': <attribute '__dict__' of 'A' objects>, 'foo': <function foo at 0x7f7797a25c08>, '__weakref__': <attribute '__weakref__' of 'A' objects>, '__doc__': None}
 
-    Scope of the current function which has local names
-    Scope of the module which has global names
-    Outermost scope which has built-in names
+    print A.__dict__.keys() # ['__module__', 'qux', '__dict__', 'foo', '__weakref__', '__doc__']<
 
-When a reference is made inside a function, the name is searched in the local namespace, then in the global namespace and finally in the built-in namespace.
+В классах помимо __class__ и __dict__, имеется еще несколько специальных атрибутов: __bases__ — список прямых родителей, __name__ — имя класса.
 
-If there is a function inside another function, a new scope is nested inside the local scope.
+Классы можно считать расширениями обычных объектов, которые реализуют интерфейс типа. Множество всех классов (или типов) принадлежат множеству всех объектов, а точнее является его подмножеством. Иначе говоря, любой класс является объектом, но не всякий объект является классом. Договоримся называть обычными объектами(regular objects) те объекты, которые классами не являются.
 
-def outer_function():
-    b = 20
-    def inner_func():
-        c = 30
+## Класс является объектом.
+        class A(object):
+            pass
+        print isinstance(A, object) # True
 
-a = 10
+        # Число — это тоже объект.
+        print isinstance(42, object) # True
 
-Here, the variable a is in the global namespace. Variable b is in the local namespace of outer_function() and c is in the nested local namespace of inner_function().
+        # Класс — это класс (т.е. тип).
+        print isinstance(A, type) # True
 
-When we are in inner_function(), c is local to us, b is nonlocal and a is global. We can read as well as assign new values to c but can only read b and c from inner_function().
+        # А вот число классом (типом) не является. (Что такое type будет пояснено позже)
+        print isinstance(42, type) # False
 
-If we try to assign as a value to b, a new variable b is created in the local namespace which is different than the nonlocal b. Same thing happens when we assign a value to a.
+        # Ну и a — тоже обычный объект.
+        a = A()
+        print isinstance(a, A) # True
+        print isinstance(a, object) # True
+        print isinstance(a, type) # False
 
-However, if we declare a as global, all the reference and assignment go to the global a. Similarly, if we want to rebind the variable b, it must be declared as nonlocal. The following example will further clarify this.
+        # И у A всего один прямой родительский класс — object.
+        print A.__bases__ # (<type 'object'>,)
 
-def outer_function():
-    a = 20
-    def inner_function():
-        a = 30
-        print('a =',a)
+        # Часть специальных параметров можно даже менять:
+        print A.__name__ # 'A'
+        A.__name__ = 'B'
+        print A # <class '__main__.B'>
 
-    inner_function()
-    print('a =',a)
+        # С помощью getattr получаем доступ к атрибутам класса:
+        # print A.qux # 'A'
+        # print A.foo # <unbound method A.foo>
 
-a = 10
-outer_function()
-print('a =',a)
+## Поиск атрибутов в обычном объекте
+В первом приближении алгоритм поиска выглядит так: сначала ищется в __dict__ объекта, потом идет поиск по __dict__ словарям класса объекта (который определяется с помощью __class__) и __dict__ его базовых классов в рекурсивном порядке.
 
-As you can see, the output of this program is
+    class A(object):
+        qux = 'A'
+        def __init__(self, name):
+            self.name=name
+        def foo(self):
+            print 'foo'
 
-a = 30
-a = 20
-a = 10
+    a = A()
+    b = A()
 
-In this program, three different variables a are defined in separate namespaces and accessed accordingly. While in the following program,
+Т.к. в обычных объектах a и b нет в __dict__ атрибута 'qux', то поиск продолжается во внутреннем словаре __dict__ их типа (класса), а потом по __dict__ словарям родителей в определенном порядке:
+    b.qux
+    'A'
+    A.qux
+    'A'
+Меняем атрибут qux у класса A. И соответственно должны поменяться значения, которые возвращают экземпляры класса A — a и b:
+    A.qux='B'
+    a.qux
+    'B'
+    b.qux
+    'B'
 
-def outer_function():
-    global a
-    a = 20
-    def inner_function():
-        global a
-        a = 30
-        print('a =',a)
+Точно так же в рантайме к классу можно добавить метод:
 
-    inner_function()
-    print('a =',a)
+    A.quux = lambda self: 'i have quux method'
+    A.__dict__['quux']
+    <function <lambda> at 0x7f7797a25b90>
+    A.quux
+    <unbound method A.<lambda>>
 
-a = 10
-outer_function()
-print('a =',a)
+И доступ к нему появится у экземпляров:
 
-The output of the program is.
+    a.quux()
+    'i have quux method'
 
-a = 30
-a = 30
-a = 30
+Точно так же как и с любыми другими объектами, можно удалить атрибут класса, например, классовую переменную qux:
 
-Here, all reference and assignment are to the global a due to the use of keyword global.
+    del A.qux
 
-# Python Inheritance
-Inheritance enable us to define a class that takes all the functionality from parent class and allows us to add more. In this article, you will learn to use inheritance in Python.
-Creating derived class from a base class using inheritance
+Она удалиться из __dict__
 
-Inheritance is a powerful feature in object oriented programming.
+    A.__dict__['qux']
+    Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    KeyError: 'qux'
 
-It refers to defining a new class with little or no modification to an existing class. The new class is called derived (or child) class and the one from which it inherits is called the base (or parent) class.
+И доступ у экземляров пропадет.
 
-Derived class inherits features from the base class, adding new features to it. This results into re-usability of code.
-Python Inheritance Syntax
+    a.qux
+    Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    AttributeError: 'A' object has no attribute 'qux'
 
-class DerivedClass(BaseClass):
-    body_of_derived_class
+У классов почти такой же поиск атрибутов, как и у обычных объектов, но есть отличия: поиск начинается с собственного __dict__ словаря, а потом идет поиск по __dict__ словарям суперклассов (которые хранятся в __bases__) по опредленному алгоритму, а затем по классу в __class__ и его суперклассах.
 
-Example of Inheritance in Python
+## Переменная self
+Внутри конструктора __init__ аргумент self это переменная, содержащая создаваемый экземпляр. Когда мы пишем
 
-To demonstrate the use of inheritance, let us take an example.
+    class Car(object):
 
-A polygon is a closed figure with 3 or more sides. Say, we have a class called Polygon defined as follows.
+        wheels = 4
+        def __init__(self, make, model):
+            self.make = make
+            self.model = model
 
-class Polygon:
-    def __init__(self, no_of_sides):
-        self.n = no_of_sides
-        self.sides = [0 for i in range(no_of_sides)]
+    mustang = Car('Ford', 'Mustang')
+    print mustang.wheels
+    # 4
+    print Car.wheels
 
-    def inputSides(self):
-        self.sides = [float(input("Enter side "+str(i+1)+" : ")) for i in range(self.n)]
+мы определяем два новых атрибута в этом экземпляре. Записывая mustang = Car('Ford', 'Mustang') мы не только передаем make, model, но и имя экземпляра, то есть этот вызов можно представить как
 
-    def dispSides(self):
-        for i in range(self.n):
-            print("Side",i+1,"is",self.sides[i])
+    Car.__init__(mustang, 'Ford', 'Mustang')
 
-This class has data attributes to store the number of sides, n and magnitude of each side as a list, sides.
+Когда мы пишем в теле конструктора self.model = model, мы в действительности инициализируем mustang.model.
 
-Method inputSides() takes in magnitude of each side and similarly, dispSides() will display these properly.
+## Правила касательно self следующие:
+- Любой метод класса содержит self в качестве первого аргумента.
+- self представляет в своем лице (произвольный) экземпляр класса.
+- Другой метод или атрибут класса используют self в виде self.name, где name имя этого атрибута или метода.
+- self в качестве аргумента пропускается при вызове методов класса
 
-A triangle is a polygon with 3 sides. So, we can created a class called Triangle which inherits from Polygon. This makes all the attributes available in class Polygon readily available in Triangle. We don't need to define them again (code re-usability). Triangle is defined as follows.
+## Инкапсуляция и доступ к свойствам
+Все значения в Python являются объектами, инкапсулирующими код (методы) и данные и предоставляющими пользователям общедоступный интерфейс. Методы и данные объекта доступны через его атрибуты.
 
-class Triangle(Polygon):
-    def __init__(self):
-        Polygon.__init__(self,3)
+## Сокрытие информации о внутреннем устройстве объекта
+Сокрытие информации о внутреннем устройстве объекта выполняется в Python на уровне соглашения между программистами о том, какие атрибуты относятся к общедоступному интерфейсу класса, а какие — к его внутренней реализации. Одиночное подчеркивание в начале имени атрибута говорит о том, что метод не предназначен для использования вне методов класса (или вне функций и классов модуля), однако, атрибут все-таки доступен по этому имени. Два подчеркивания в начале имени дают несколько большую защиту: атрибут перестает быть доступен по этому имени.
 
-    def findArea(self):
-        a, b, c = self.sides
-        # calculate the semi-perimeter
-        s = (a + b + c) / 2
-        area = (s*(s-a)*(s-b)*(s-c)) ** 0.5
-        print('The area of the triangle is %0.2f' %area)
+Особым случаем является наличие двух подчеркиваний в начале и в конце имени атрибута. Они используются для специальных свойств и функций класса (например, для перегрузки операции). Такие атрибуты доступны по своему имени, но их использование зарезервировано для специальных атрибутов, изменяющих поведение объекта.
 
-However, class Triangle has a new method findArea() to find and print the area of the triangle. Here is a sample run.
+## Доступ к атрибуту
 
->>> t = Triangle()
+может быть прямой:
 
->>> t.inputSides()
-Enter side 1 : 3
-Enter side 2 : 5
-Enter side 3 : 4
+    class Y:
+        """The  vertical  motion  of  a  ball."""
 
->>> t.dispSides()
-Side 1 is 3.0
-Side 2 is 5.0
-Side 3 is 4.0
+        def __init__(self, v0):
+            self.v0 = v0 # атрибут получает значение в конструкторе
+            self.g = 9.81
 
->>> t.findArea()
-The area of the triangle is 6.00
+    a = Y(5)
+    print a.v0
+    a.v0 = 5
 
-We can see that, even though we did not define methods like inputSides() or dispSides() for class Triangle, we were able to use them.
+Доступ к атрибуту с использованием свойств с заданными методами для получения, установки и удаления атрибута:
 
-If an attribute is not found in the class, search continues to the base class. This repeats recursively, if the base class is itself derived from other classes.
+    class Y:
+        """The  vertical  motion  of  a  ball."""
 
-Method Overriding in Python
+        def __init__(self, v0):
+            self.v0 = v0 # атрибут получает значение в конструкторе
+            self.g = 9.81
 
-In the above example, notice that __init__() method was defined in both classes, Triangle as well Polygon. When this happens, the method in the derived class overrides that in the base class. This is to say, __init__() in Triangle gets preference over the same in Polygon.
+        def getv0(self):                 # метод для получения значения
+            return self._v0
 
-Generally when overriding a base method, we tend to extend the definition rather than simply replace it. The same is being done by calling the method in base class from the one in derived class (calling Polygon.__init__() from __init__() in Triangle).
+        def setv0(self, value):          # присваивания нового значения
+            self._v0 = value
 
-A better option would be to use the built-in function super(). So, super().__init(3) is equivalent to Polygon.__init__(self,3) and is preferred. You can learn more about the super() function in Python.
+        def delv0(self):                 # удаления атрибута
+            del self._v0                 
 
-Two built-in functions isinstance() and issubclass() are used to check inheritances. Function isinstance() returns True if the object is an instance of the class or other classes derived from it. Each and every class in Python inherits from the base class object.
+        v0 = property(getv0, setv0, delv0, "Свойство v0")    # определяем v0 как свойство
 
->>> isinstance(t,Triangle)
-True
+    a = Y(5)      
+    print a.v0      # Синтаксис доступа к атрибуту при этом прежний
+    a.v0 = 5 #_
 
->>> isinstance(t,Polygon)
-True
 
->>> isinstance(t,int)
-False
+## Строки документации
 
->>> isinstance(t,object)
-True
+Классы, как и функции, могут быть описаны простым человеческим языком сразу в следующей строке после заголовка с помощью doc strings — строк документации. Вводятся они абсолютно таким же образом, с помощью тройки двойных кавычек с каждой стороны:
 
-Similarly, issubclass() is used to check for class inheritance.
+    class Y:
+        """The vertical motion of a ball."""
 
->>> issubclass(Polygon,Triangle)
-False
+        def __init__(self, v0):
+            ...
 
->>> issubclass(Triangle,Polygon)
-True
+В случае объемного конечного продукта обычно пишут более исчерпывающее объяснение о том как этот класс может быть использован, какие методы и атрибуты включает, примеры использования класса 9.py:
 
->>> issubclass(bool,int)
-True
-Python Multiple Inheritance
-In this article, you'll learn what is multiple inheritance in Python and how to use it in your program. You'll also learn about multilevel inheritance and the method resolution order.
-Python Multiple Inheritance
+    class Y:
+        """Mathematical function for the vertical motion of a ball.
 
-Like C++, a class can be derived from more than one base classes in Python. This is called multiple inheritance.
+        Methods:
+            constructor(v0): set initial velocity v0.
+            value(t): compute the height as function of t.
+            formula(): print out the formula for the height.
 
-In multiple inheritance, the features of all the base classes are inherited into the derived class. The syntax for multiple inheritance is similar to single inheritance.
-Python Multiple Inheritance Example
+        Attributes:
+            v0: the initial velocity of the ball (time 0).
+            g: acceleration of gravity (fixed).
 
-class Base1:
-    pass
+        Usage:
+        >>> y  =  Y(3)
+        >>> position1 = y.value(0.1)
+        >>> position2 = y.value(0.3)
+        >>> print  y.formula()
+        v0*t - 0.5*g*t**2; v0=3
+        """
 
-class Base2:
-    pass
+Классы (типы) — это объектные фабрики. Их главная задача — создавать объекты, обладающие определенным поведением.
 
-class MultiDerived(Base1, Base2):
-    pass
+Классы определяют поведение объектов с помощью своих атрибутов (которые хранятся в __dict__ класса): методов, свойств, классовых переменные, дескрипторов, а также с помощью атрибутов, унаследованных от родительских классов.
 
-Multiple Inheritance in Python
+Инстанцирование обычного объекта происходит в 2 этапа: сначала его создание, потом инициализация. Соответственно, сначала запускается метод класса __new__, который возвращает объект данного класса, потом выполняется метод класса __init__, который инициализирует уже созданный объект.
 
-The class MultiDerived inherits from both Base1 and Base2.
-Multilevel Inheritance in Python
+def __new__(cls, ...) — статический метод (но его можно таковым не объявлять), который создает объект класса cls.
 
-On the other hand, we can also inherit form a derived class. This is called multilevel inheritance. It can be of any depth in Python.
+def __init__(self, ...) — метод класса, который инициализирует созданный объект.
 
-In multilevel inheritance, features of the base class and the derived class is inherited into the new derived class.
+# Статические методы
 
-An example with corresponding visualization is given below.
+Статические методы в Python являются синтаксическими аналогами статических функций в основных языках программирования. Они не получают ни экземпляр (self), ни класс (cls) первым параметром. Для создания статического метода (только «новые» классы могут иметь статические методы) используется декоратор staticmethod
 
-class Base:
-    pass
+    class Car(object):
 
-class Derived1(Base):
-    pass
+        wheels = 4
+        def __init__(self, make, model):
+            self.make = make
+            self.model = model
 
-class Derived2(Derived1):
-    pass
+        @staticmethod
+        def test(x):
+            return x == 0
 
-Multilevel Inheritance in Python
-Method Resolution Order in Python
 
-Every class in Python is derived from the class object. It is the most base type in Python.
+    Car.test(1)    # доступ к статическому методу можно получать и через класс
+    False
+    f = Car()
+    f.test(0)    # и через экземпляр класса
+    True
 
-So technically, all other class, either built-in or user-defines, are derived classes and all objects are instances of object class.
+Статические методы реализованы с помощью свойств (property).
 
-# Output: True
-print(issubclass(list,object))
+# Static Methods car2
+    class Car(object):
 
-# Output: True
-print(isinstance(5.5,object))
+        wheels = 4
 
-# Output: True
-print(isinstance("Hello",object))
+        #Static Methods
+        @staticmethod
+        def make_car_sound():
+            print 'VRooooommmm!'
 
-In the multiple inheritance scenario, any specified attribute is searched first in the current class. If not found, the search continues into parent classes in depth-first, left-right fashion without searching same class twice.
 
-So, in the above example of MultiDerived class the search order is [MultiDerived, Base1, Base2, object]. This order is also called linearization of MultiDerived class and the set of rules used to find this order is called Method Resolution Order (MRO).
+        def __init__(self, make, model):
+            self.make = make
+            self.model = model
 
-MRO must prevent local precedence ordering and also provide monotonicity. It ensures that a class always appears before its parents and in case of multiple parents, the order is same as tuple of base classes.
 
-MRO of a class can be viewed as the __mro__ attribute or mro() method. The former returns a tuple while latter returns a list.
+    mustang = Car('Ford', 'Mustang')
+    print mustang.wheels
+    # 4
+    print Car.wheels
+    # 4
+    mustang.make_car_sound()
+    Car.make_car_sound()
 
->>> MultiDerived.__mro__
-(<class '__main__.MultiDerived'>,
- <class '__main__.Base1'>,
- <class '__main__.Base2'>,
- <class 'object'>)
 
->>> MultiDerived.mro()
-[<class '__main__.MultiDerived'>,
- <class '__main__.Base1'>,
- <class '__main__.Base2'>,
- <class 'object'>]
+## Метод класса
 
-Here is a little more complex multiple inheritance example and its visualization along with the MRO.
+Классовые методы в Python занимают промежуточное положение между статическими и обычными. В то время как обычные методы получают первым параметром экземпляр класса, а статические не получают ничего, в классовые методы передается класс. Возможность создания классовых методов является одним из следствий того, что в Python классы также являются объектами. Для создания классового (только «новые» классы могут иметь классовые методы) метода можно использовать декоратор classmethod
 
-class X: pass
-class Y: pass
-class Z: pass
+# Static Methods car3
+    class Car(object):
 
-class A(X,Y): pass
-class B(Y,Z): pass
+        wheels = 4
 
-class M(B,A,Z): pass
+        #Static Methods
+        @staticmethod
+        def make_car_sound():
+            print 'VRooooommmm!'
 
-# Output:
-# [<class '__main__.M'>, <class '__main__.B'>,
-# <class '__main__.A'>, <class '__main__.X'>,
-# <class '__main__.Y'>, <class '__main__.Z'>,
-# <class 'object'>]
+        # Class Methods
+        @classmethod
+        def is_motorcycle(cls):
+            return cls.wheels == 2
 
-print(M.mro())
+        def __init__(self, make, model):
+            self.make = make
+            self.model = model
 
-Refer to this, for further discussion on MRO and to know the actual algorithm how it is calculated.
 
+    mustang = Car('Ford', 'Mustang')
+    print mustang.wheels
+    # 4
+    print Car.wheels
+    # 4
+    mustang.make_car_sound()
+    Car.make_car_sound()
 
-Python 3 OOP Part 3 - Delegation: composition and inheritance
+    if mustang.is_motorcycle():
+        print 'it is not a car'
+    else:
+        print 'mustang is a car'
 
-This post is available as an IPython Notebook here
-The Delegation Run
+Классовые методы достаточно часто используются для перегрузки конструктора. Классовые методы, как и статические, реализуются через свойства (property).
 
-If classes are objects what is the difference between types and instances?
+## car4.py
+    class Car(object):
+        """A car for sale by Jeffco Car Dealership.
 
-When I talk about "my cat" I am referring to a concrete instance of the "cat" concept, which is a subtype of "animal". So, despite being both objects, while types can be specialized, instances cannot.
+        Attributes:
+            wheels: An integer representing the number of wheels the car has.
+            miles: The integral number of miles driven on the car.
+            make: The make of the car as a string.
+            model: The model of the car as a string.
+            year: The integral year the car was built.
+            sold_on: The date the vehicle was sold.
+        """
 
-Usually an object B is said to be a specialization of an object A when:
+        def __init__(self, wheels, miles, make, model, year, sold_on):
+            """Return a new Car object."""
+            self.wheels = wheels
+            self.miles = miles
+            self.make = make
+            self.model = model
+            self.year = year
+            self.sold_on = sold_on
 
-    B has all the features of A
-    B can provide new features
-    B can perform some or all the tasks performed by A in a different way
+        def sale_price(self):
+            """Return the sale price for this car as a float amount."""
+            if self.sold_on is not None:
+                return 0.0  # Already sold
+            return 5000.0 * self.wheels
 
-Those targets are very general and valid for any system and the key to achieve them with the maximum reuse of already existing components is delegation. Delegation means that an object shall perform only what it knows best, and leave the rest to other objects.
+        def purchase_price(self):
+            """Return the price for which we would pay to purchase the car."""
+            if self.sold_on is None:
+                return 0.0  # Not yet sold
+            return 8000 - (.10 * self.miles)
 
-Delegation can be implemented with two different mechanisms: composition and inheritance. Sadly, very often only inheritance is listed among the pillars of OOP techniques, forgetting that it is an implementation of the more generic and fundamental mechanism of delegation; perhaps a better nomenclature for the two techniques could be explicit delegation (composition) and implicit delegation (inheritance).
+    class Truck(object):
+        """A truck for sale by Jeffco Car Dealership.
 
-Please note that, again, when talking about composition and inheritance we are talking about focusing on a behavioural or structural delegation. Another way to think about the difference between composition and inheritance is to consider if the object knows who can satisfy your request or if the object is the one that satisfy the request.
+        Attributes:
+            wheels: An integer representing the number of wheels the truck has.
+            miles: The integral number of miles driven on the truck.
+            make: The make of the truck as a string.
+            model: The model of the truck as a string.
+            year: The integral year the truck was built.
+            sold_on: The date the vehicle was sold.
+        """
 
-Please, please, please do not forget composition: in many cases, composition can lead to simpler systems, with benefits on maintainability and changeability.
+        def __init__(self, wheels, miles, make, model, year, sold_on):
+            """Return a new Truck object."""
+            self.wheels = wheels
+            self.miles = miles
+            self.make = make
+            self.model = model
+            self.year = year
+            self.sold_on = sold_on
 
-Usually composition is said to be a very generic technique that needs no special syntax, while inheritance and its rules are strongly dependent on the language of choice. Actually, the strong dynamic nature of Python softens the boundary line between the two techniques.
-Inheritance Now
+        def sale_price(self):
+            """Return the sale price for this truck as a float amount."""
+            if self.sold_on is not None:
+                return 0.0  # Already sold
+            return 5000.0 * self.wheels
 
-In Python a class can be declared as an extension of one or more different classes, through the class inheritance mechanism. The child class (the one that inherits) has the same internal structure of the parent class (the one that is inherited), and for the case of multiple inheritance the language has very specific rules to manage possible conflicts or redefinitions among the parent classes. A very simple example of inheritance is
+        def purchase_price(self):
+            """Return the price for which we would pay to purchase the truck."""
+            if self.sold_on is None:
+                return 0.0  # Not yet sold
+            return 10000 - (.10 * self.miles)
 
-class SecurityDoor(Door):
-    pass
+    v = Car(4,10000,'Ford','Rodeo',2014,1)
+    print v.purchase_price()
 
-where we declare a new class SecurityDoor that, at the moment, is a perfect copy of the Door class. Let us investigate what happens when we access attributes and methods. First we instance the class
+    t = Truck(4,10000,'Honda','Accord',2014,1)
+    print t.purchase_price()
 
->>> sdoor = SecurityDoor(1, 'closed')
 
-The first check we can do is that class attributes are still global and shared
+## Наследование
+Python поддерживает как одиночное наследование, так и множественное, позволяющее классу быть производным от любого количества базовых классов.
 
->>> SecurityDoor.colour is Door.colour
-True
->>> sdoor.colour is Door.colour
-True
+    class Car(object):                # наследуем один базовый класс - object
+            def name1(self): return 'Car'
+    class Truck(object):
+            def name2(self): return 'Truck'
+    class Child(Car, Truck):           # создадим класс, наследующий Car, Truck (и, опосредованно, object)
+            pass
+    x = Child()
+    x.name1(), x.name2()               # экземпляру Child доступны методы из Car и Truck
+    'Par1','Par2'
 
-This shows us that Python tries to resolve instance members not only looking into the class the instance comes from, but also investigating the parent classes. In this case sdoor.colour becomes SecurityDoor.colour, that in turn becomes Door.colour. SecurityDoor is a Door.
+## одиночное наследование car5.py
+    class Vehicle(object):
+        """A vehicle for sale by Jeffco Car Dealership.
 
-If we investigate the content of __dict__ we can catch a glimpse of the inheritance mechanism in action
+        Attributes:
+            wheels: An integer representing the number of wheels the vehicle has.
+            miles: The integral number of miles driven on the vehicle.
+            make: The make of the vehicle as a string.
+            model: The model of the vehicle as a string.
+            year: The integral year the vehicle was built.
+            sold_on: The date the vehicle was sold.
+        """
 
->>> sdoor.__dict__
-{'number': 1, 'status': 'closed'}
->>> sdoor.__class__.__dict__
-mappingproxy({'__doc__': None, '__module__': '__main__'})
->>> Door.__dict__
-mappingproxy({'__dict__': <attribute '__dict__' of 'Door' objects>,
-    'colour': 'yellow',
-    'open': <function Door.open at 0xb687e224>,
-    '__init__': <function Door.__init__ at 0xb687e14c>,
-    '__doc__': None,
-    'close': <function Door.close at 0xb687e1dc>,
-    'knock': <classmethod object at 0xb67ff6ac>,
-    '__weakref__': <attribute '__weakref__' of 'Door' objects>,
-    '__module__': '__main__',
-    'paint': <classmethod object at 0xb67ff6ec>})
+        base_sale_price = 0
 
-As you can see the content of __dict__ for SecurityDoor is very narrow compared to that of Door. The inheritance mechanism takes care of the missing elements by climbing up the classes tree. Where does Python get the parent classes? A class always contains a __bases__ tuple that lists them
+        def __init__(self, wheels, miles, make, model, year, sold_on):
+            """Return a new Vehicle object."""
+            self.wheels = wheels
+            self.miles = miles
+            self.make = make
+            self.model = model
+            self.year = year
+            self.sold_on = sold_on
 
->>> SecurityDoor.__bases__
-(<class '__main__.Door'>,)
 
-So an example of what Python does to resolve a class method call through the inheritance tree is
+        def sale_price(self):
+            """Return the sale price for this vehicle as a float amount."""
+            if self.sold_on is not None:
+                return 0.0  # Already sold
+            return 5000.0 * self.wheels
 
->>> sdoor.__class__.__bases__[0].__dict__['knock'].__get__(sdoor)
-<bound method type.knock of <class '__main__.SecurityDoor'>>
->>> sdoor.knock
-<bound method type.knock of <class '__main__.SecurityDoor'>>
+        def purchase_price(self):
+            """Return the price for which we would pay to purchase the vehicle."""
+            if self.sold_on is None:
+                return 0.0  # Not yet sold
+            return self.base_sale_price - (.10 * self.miles)
 
-Please note that this is just an example that does not consider multiple inheritance.
+    class Car(Vehicle):
 
-Let us try now to override some methods and attributes. In Python you can override (redefine) a parent class member simply by redefining it in the child class.
+        def __init__(self, wheels, miles, make, model, year, sold_on):
+            """Return a new Car object."""
+            self.wheels = wheels
+            self.miles = miles
+            self.make = make
+            self.model = model
+            self.year = year
+            self.sold_on = sold_on
+            self.base_sale_price = 8000
 
-class SecurityDoor(Door):
-    colour = 'gray'
-    locked = True
 
-    def open(self):
-        if not self.locked:
-            self.status = 'open'
+    class Truck(Vehicle):
 
-As you can forecast, the overridden members now are present in the __dict__ of the SecurityDoor class
+        def __init__(self, wheels, miles, make, model, year, sold_on):
+            """Return a new Truck object."""
+            self.wheels = wheels
+            self.miles = miles
+            self.make = make
+            self.model = model
+            self.year = year
+            self.sold_on = sold_on
+            self.base_sale_price = 10000
 
->>> SecurityDoor.__dict__
-mappingproxy({'__doc__': None,
-    '__module__': '__main__',
-    'open': <function SecurityDoor.open at 0xb6fcf89c>,
-    'colour': 'gray',
-    'locked': True})
+    v = Car(4,10000,'Ford','Rodeo',2014,1)
+    print v.purchase_price()
 
-So when you override a member, the one you put in the child class is used instead of the one in the parent class simply because the former is found before the latter while climbing the class hierarchy. This also shows you that Python does not implicitly call the parent implementation when you override a method. So, overriding is a way to block implicit delegation.
+    t = Truck(4,10000,'Honda','Accord',2014,1)
+    print t.purchase_price()
 
-If we want to call the parent implementation we have to do it explicitly. In the former example we could write
 
-class SecurityDoor(Door):
-    colour = 'gray'
-    locked = True
+Начиная с версии языка 2.6 в стандартную библиотеку включается модуль abc, добавляющий в язык абстрактные базовые классы
 
-    def open(self):
-        if self.locked:
-            return
-        Door.open(self)
+позволяют определить класс, указав при этом, какие методы или свойства обязательно переопределить в классах-наследниках:
 
-You can easily test that this implementation is working correctly.
+        @abstractmethod
+        def vehicle_type():
+            """"Return a string representing the type of vehicle this is."""
+            pass
 
->>> sdoor = SecurityDoor(1, 'closed')
->>> sdoor.status
-'closed'
->>> sdoor.open()
->>> sdoor.status
-'closed'
->>> sdoor.locked = False
->>> sdoor.open()
->>> sdoor.status
-'open'
+        @abstractproperty
+            def speed():
+            """Скорость объекта"""
 
-This form of explicit parent delegation is heavily discouraged, however.
+## car6.py
+    from abc import ABCMeta, abstractmethod
+    class Vehicle(object):
+        """A vehicle for sale by Jeffco Car Dealership.
 
-The first reason is because of the very high coupling that results from explicitly naming the parent class again when calling the method. Coupling, in the computer science lingo, means to link two parts of a system, so that changes in one of them directly affect the other one, and is usually avoided as much as possible. In this case if you decide to use a new parent class you have to manually propagate the change to every method that calls it. Moreover, since in Python the class hierarchy can be dynamically changed (i.e. at runtime), this form of explicit delegation could be not only annoying but also wrong.
+        Attributes:
+            wheels: An integer representing the number of wheels the vehicle has.
+            miles: The integral number of miles driven on the vehicle.
+            make: The make of the vehicle as a string.
+            model: The model of the vehicle as a string.
+            year: The integral year the vehicle was built.
+            sold_on: The date the vehicle was sold.
+        """
 
-The second reason is that in general you need to deal with multiple inheritance, where you do not know a priori which parent class implements the original form of the method you are overriding.
+        __metaclass__ = ABCMeta
 
-To solve these issues, Python supplies the super() built-in function, that climbs the class hierarchy and returns the correct class that shall be called. The syntax for calling super() is
+        base_sale_price = 0
 
-class SecurityDoor(Door):
-    colour = 'gray'
-    locked = True
+        def sale_price(self):
+            """Return the sale price for this vehicle as a float amount."""
+            if self.sold_on is not None:
+                return 0.0  # Already sold
+            return 5000.0 * self.wheels
 
-    def open(self):
-        if self.locked:
-            return
-        super().open()
+        def purchase_price(self):
+            """Return the price for which we would pay to purchase the vehicle."""
+            if self.sold_on is None:
+                return 0.0  # Not yet sold
+            return self.base_sale_price - (.10 * self.miles)
 
-The output of super() is not exactly the Door class. It returns a super object which representation is <super: <class 'SecurityDoor'>, <SecurityDoor object>>. This object however acts like the parent class, so you can safely ignore its custom nature and use it just like you would do with the Door class in this case.
-Enter the Composition
+        @abstractmethod
+        def vehicle_type():
+            """"Return a string representing the type of vehicle this is."""
+            pass
 
-Composition means that an object knows another object, and explicitly delegates some tasks to it. While inheritance is implicit, composition is explicit: in Python, however, things are far more interesting than this =).
+        @abstractproperty
+            def speed():
+            """Скорость объекта"""
 
-First of all let us implement classic composition, which simply makes an object part of the other as an attribute
+    class Car(Vehicle):
 
-class SecurityDoor:
-    colour = 'gray'
-    locked = True
+        def __init__(self, wheels, miles, make, model, year, sold_on):
+            """Return a new Car object."""
+            self.wheels = wheels
+            self.miles = miles
+            self.make = make
+            self.model = model
+            self.year = year
+            self.sold_on = sold_on
+            self.base_sale_price = 8000
 
-    def __init__(self, number, status):
-        self.door = Door(number, status)
+        def vehicle_type(self):
+            """"Return a string representing the type of vehicle this is."""
+            return 'car'
 
-    def open(self):
-        if self.locked:
-            return
-        self.door.open()
 
-    def close(self):
-        self.door.close()
+    class Truck(Vehicle):
 
-The primary goal of composition is to relax the coupling between objects. This little example shows that now SecurityDoor is an object and no more a Door, which means that the internal structure of Door is not copied. For this very simple example both Door and SecurityDoor are not big classes, but in a real system objects can very complex; this means that their allocation consumes a lot of memory and if a system contains thousands or millions of objects that could be an issue.
-
-The composed SecurityDoor has to redefine the colour attribute since the concept of delegation applies only to methods and not to attributes, doesn't it?
-
-Well, no. Python provides a very high degree of indirection for objects manipulation and attribute access is one of the most useful. As you already discovered, accessing attributes is ruled by a special method called __getattribute__() that is called whenever an attribute of the object is accessed. Overriding __getattribute__(), however, is overkill; it is a very complex method, and, being called on every attribute access, any change makes the whole thing slower.
-
-The method we have to leverage to delegate attribute access is __getattr__(), which is a special method that is called whenever the requested attribute is not found in the object. So basically it is the right place to dispatch all attribute and method access our object cannot handle. The previous example becomes
-
-class SecurityDoor:
-    locked = True
-
-    def __init__(self, number, status):
-        self.door = Door(number, status)
-
-    def open(self):
-        if self.locked:
-            return
-        self.door.open()
-
-    def __getattr__(self, attr):
-        return getattr(self.door, attr)
-
-Using __getattr__() blends the separation line between inheritance and composition since after all the former is a form of automatic delegation of every member access.
-
-class ComposedDoor:
-    def __init__(self, number, status):
-        self.door = Door(number, status)
-
-    def __getattr__(self, attr):
-        return getattr(self.door, attr)
-
-As this last example shows, delegating every member access through __getattr__() is very simple. Pay attention to getattr() which is different from __getattr__(). The former is a built-in that is equivalent to the dotted syntax, i.e. getattr(obj, 'someattr') is the same as obj.someattr, but you have to use it since the name of the attribute is contained in a string.
-
-Composition provides a superior way to manage delegation since it can selectively delegate the access, even mask some attributes or methods, while inheritance cannot. In Python you also avoid the memory problems that might arise when you put many objects inside another; Python handles everything through its reference, i.e. through a pointer to the memory position of the thing, so the size of an attribute is constant and very limited.
+        def __init__(self, wheels, miles, make, model, year, sold_on):
+            """Return a new Truck object."""
+            self.wheels = wheels
+            self.miles = miles
+            self.make = make
+            self.model = model
+            self.year = year
+            self.sold_on = sold_on
+            self.base_sale_price = 10000
+
+        def vehicle_type(self):
+            """"Return a string representing the type of vehicle this is."""
+            return 'truck'
+
+    v = Car(4,10000,'Ford','Rodeo',2014,1)
+    print v.purchase_price()
+
+    t = Truck(4,10000,'Honda','Accord',2014,1)
+    print t.purchase_price()
+
+
+## app0
+        # -*- coding:utf-8 -*-
+        # ---------- Cars Shop ----------
+        '''
+         Program make a simple Cars Shop
+        '''
+        # импортирование модулей python
+        try:
+            # for Python2
+            from Tkinter import *   # notice capitalized T in Tkinter
+            import tkFont
+            import tkMessageBox
+        except ImportError:
+            # for Python3
+            from tkinter import *   # notice lowercase 't' in tkinter here
+            from tkinter import font
+            from tkinter import messagebox
+
+
+        class Application(Frame):
+
+            def __init__(self, master=None):
+                Frame.__init__(self, master)
+                self._init_gridbox()
+
+            def _init_gridbox(self):
+                for i in range(5):
+                    for j in range(4):
+                        l = Label(text='%d.%d' % (i, j), relief=RIDGE)
+                        l.grid(row=i, column=j, sticky=NSEW)
+
+            def about(self):
+                tkMessageBox.showinfo("Old Cars Shop", "Old Cars Shop")
+
+
+        def main():
+            # Создать приложение
+            app = Application()
+            # Вызов методов класса менеджера окон (Wm)
+            app.master.title("Old Cars Shop")
+            app.master.maxsize(1000, 400)
+            # Запуск программы
+            app.mainloop()
+
+
+        if __name__ == '__main__':
+            main()
+
+## app1
+
+        def _init_gridbox(self):
+            for i in range(5):
+                cols = []
+                for j in range(4):
+                    e = Entry(relief=RIDGE)
+                    e.grid(row=i, column=j, sticky=NSEW)
+                    e.insert(END, '%d.%d' % (i, j))
+
+## app2
+
+        def _init_gridbox(self):
+            for j in range(4):
+                l = Label(text='%d.%d' % (0, j), relief=RIDGE)
+                l.grid(row=0, column=j, sticky=NSEW)
+            for i in range(5):
+                cols = []
+                for j in range(4):
+                    e = Entry(relief=RIDGE)
+                    e.grid(row=i+1, column=j, sticky=NSEW)
+                    e.insert(END, '%d.%d' % (i+1, j))
+
+## app3
+        def _init_gridbox(self):
+            labels = ('make', 'model', 'year', 'wheels', 'mileage', 'sold_on')
+            data = [
+                ('Ford', 'Rodeo', 2014, 4, 10000, 1),
+                ('Toyota', 'Camry CE (Classic Edition)', 2011, 4, 17000, 0),
+                ('Toyota', 'Camry LE (Luxury Edition)', 2013, 4, 20000, 1),
+                ('Toyota', 'Camry', 2000, 4, 12000, 0),
+                ('Ford', 'Rodeo', 2014, 4, 10000, 0),
+              ]
+            j = 0
+            for txt in labels:
+                l = Label(text='%s' % txt, relief=RIDGE)
+                l.grid(row=0, column=j, sticky=NSEW)
+                j += 1
+
+            for i in range(len(data)):
+                cols = []
+                j = 0
+                for d in data[i]:
+                    e = Entry(relief=RIDGE)
+                    e.grid(row=i+1, column=j, sticky=NSEW)
+                    e.insert(END, d)
+                    j += 1
