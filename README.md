@@ -224,7 +224,7 @@ maxsplit=-1 : Максимальное количество разбиений, 
 ## fnmatch.translate(pattern)
 Возвращает преобразованный в регулярное выражение шаблон pattern
 
-## genfind.py. A generator function that yields filenames matching a given filename pattern. Функция генератор, который дает имена файлов, соответствующих заданному шаблону имен файлов.
+## genfind.py. Генератор имен файлов, соответствующих заданному шаблону.
 
         # genfind.py
         #
